@@ -10,7 +10,7 @@
   <body>
     <div class="container">
       <div class="receive-screen">
-        <!-- 헤더 -->
+        <!-- Header -->
         <header class="header">
           <button class="back-btn" onclick="goBack()">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -21,11 +21,11 @@
           <div style="width: 24px;"></div>
         </header>
 
-        <!-- 내용 -->
+        <!-- Content -->
         <div class="receive-content">
           <div class="qr-section">
             <div class="qr-container" id="qr-code">
-              <!-- QR 코드가 여기에 생성됨 -->
+              <!-- QR code will be generated here -->
             </div>
           </div>
 
@@ -39,23 +39,20 @@
 
           <div class="receive-info">
             <p>You can send <strong class="coin-name">COIN</strong> to this address.</p>
-            <p class="receive-warning">Sending other coins may result in loss of funds.</p>
+            <p class="receive-warning">Sending other coins may result in permanent loss.</p>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- 필요한 라이브러리들 -->
-    <!-- QR 코드 생성 라이브러리 -->
+    <!-- Required Libraries -->
+    <!-- QR Code Generation Library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
-    <!-- Solana Web3.js 번들 -->
-    <script src="../../assets/solana-bundle.umd.cjs"></script>
-    
-    <!-- 설정 및 어댑터 -->
+    <!-- App Common Code -->
     <script src="../../app.js"></script>
     
-    <!-- 메인 로직 -->
+    <!-- Main Logic -->
     <script src="receive.js"></script>
   </body>
 </html>

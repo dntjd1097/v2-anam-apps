@@ -13,9 +13,15 @@ document.addEventListener("DOMContentLoaded", function () {
     console.log("Bridge API available");
   }
 
-  // Solana 어댑터 초기화
+  // Bitcoin 어댑터 초기화
   adapter = window.getAdapter();
-  console.log("Solana adapter initialized");
+  
+  if (!adapter) {
+    console.error(
+      "BitcoinAdapter not initialized."
+    );
+    showToast("Bitcoin adapter initialization failed");
+  }
 
   // UI 테마 적용
   applyTheme();
@@ -87,8 +93,8 @@ function checkWalletStatus() {
       displayWalletInfo();
       updateBalance();
     } catch (error) {
-      console.error("Failed to load wallet:", error);
-      showToast("Failed to load wallet");
+      console.error("Wallet loading failed:", error);
+      showToast("Wallet loading failed");
       resetWallet();
     }
   } else {
@@ -124,7 +130,7 @@ async function createWallet() {
     currentWallet = walletData;
 
     console.log("Wallet created:", wallet.address);
-    showToast("Wallet created!");
+    showToast("Wallet created successfully!");
 
     document.getElementById("wallet-creation").style.display = "none";
     document.getElementById("wallet-main").style.display = "block";
@@ -132,7 +138,7 @@ async function createWallet() {
     displayWalletInfo();
     updateBalance();
   } catch (error) {
-    console.error("Failed to create wallet:", error);
+    console.error("Wallet creation failed:", error);
     showToast("Failed to create wallet: " + error.message);
   }
 }
@@ -168,7 +174,7 @@ async function importFromMnemonic() {
     localStorage.setItem(walletKey, JSON.stringify(walletData));
     currentWallet = walletData;
 
-    showToast("Wallet imported!");
+    showToast("Wallet imported successfully!");
 
     document.getElementById("wallet-creation").style.display = "none";
     document.getElementById("wallet-main").style.display = "block";
@@ -176,7 +182,7 @@ async function importFromMnemonic() {
     displayWalletInfo();
     updateBalance();
   } catch (error) {
-    console.error("Failed to import wallet:", error);
+    console.error("Wallet import failed:", error);
     showToast("Please enter valid mnemonic");
   }
 }
@@ -214,7 +220,7 @@ async function importFromPrivateKey() {
     localStorage.setItem(walletKey, JSON.stringify(walletData));
     currentWallet = walletData;
 
-    showToast("Wallet imported!");
+    showToast("Wallet imported successfully!");
 
     document.getElementById("wallet-creation").style.display = "none";
     document.getElementById("wallet-main").style.display = "block";
@@ -222,7 +228,7 @@ async function importFromPrivateKey() {
     displayWalletInfo();
     updateBalance();
   } catch (error) {
-    console.error("Failed to import wallet:", error);
+    console.error("Wallet import failed:", error);
     showToast("Please enter valid private key");
   }
 }
@@ -242,7 +248,7 @@ function displayWalletInfo() {
   addressDisplay.style.cursor = "pointer";
   addressDisplay.onclick = () => {
     navigator.clipboard.writeText(address);
-    showToast("Address copied");
+    showToast("Address copied to clipboard");
   };
 }
 
@@ -259,7 +265,7 @@ async function updateBalance() {
     // TODO: 실시간 가격 API 연동 필요
     document.getElementById("fiat-value").textContent = "";
   } catch (error) {
-    console.error("Failed to get balance:", error);
+    // console.error("잔액 조회 실패:", error);
   }
 }
 
@@ -311,7 +317,7 @@ function resetWallet() {
   if (mnemonicInput) mnemonicInput.value = "";
   if (privateKeyInput) privateKeyInput.value = "";
 
-  showToast("Wallet reset");
+  showToast("Wallet has been reset");
 }
 
 // 트랜잭션 요청 처리 (Bridge API)

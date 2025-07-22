@@ -11,12 +11,12 @@ document.addEventListener("DOMContentLoaded", function () {
   // 지갑 정보 로드
   loadWalletInfo();
 
-  // Solana 어댑터 초기화
+  // Ethereum 어댑터 초기화
   adapter = window.getAdapter();
   
   if (!adapter) {
-    console.error("SolanaAdapter not initialized");
-    showToast("Solana adapter initialization failed");
+    console.error("EthereumAdapter not initialized");
+    showToast("Failed to initialize Ethereum adapter");
   }
 
   // UI 초기화
@@ -51,10 +51,10 @@ async function updateUI() {
   if (currentWallet && adapter) {
     try {
       const balance = await adapter.getBalance(currentWallet.address);
-      const formattedBalance = window.formatBalance(balance, CoinConfig.decimals);
+      const formattedBalance = window.formatBalance(balance);
       document.getElementById('available-balance').textContent = formattedBalance;
     } catch (error) {
-      console.error("Failed to get balance:", error);
+      console.error("Failed to fetch balance:", error);
     }
   }
 }
@@ -67,8 +67,7 @@ function goBack() {
   } else if (window.anam && window.anam.navigateTo) {
     window.anam.navigateTo('pages/index/index');
   } else {
-    // 개발 환경: 일반 HTML 페이지 이동
-    window.location.href = '../index/index.html';
+    console.error("navigateTo API not available");
   }
 }
 
@@ -95,16 +94,16 @@ async function confirmSend() {
   }
 
   if (parseFloat(amount) <= 0) {
-    showToast("Please enter amount greater than 0");
+    showToast("Please enter an amount greater than 0");
     return;
   }
 
   try {
     showToast("Sending transaction...");
 
-    // Solana는 고정 수수료 사용 (getGasPrice 미구현)
-    // 기본 수수료: 5000 lamports = 0.000005 SOL
-    const fee = "0.000005";
+    // 수수료 가져오기
+    const gasPrice = await adapter.getGasPrice();
+    const fee = gasPrice[feeLevel];
 
     // 트랜잭션 전송
     const txParams = {
@@ -114,10 +113,10 @@ async function confirmSend() {
       privateKey: currentWallet.privateKey,
     };
 
-    // 수수료 관련 파라미터 추가
+    // Ethereum 특화 파라미터 추가
     if (feeLevel && fee) {
-      txParams.fee = fee;
-      txParams.feePreference = feeLevel;
+      txParams.gasPrice = fee; // Gwei 단위
+      txParams.gasLimit = 21000; // 기본 ETH 전송 가스 한도
     }
 
     const result = await adapter.sendTransaction(txParams);
@@ -139,4 +138,3 @@ async function confirmSend() {
 // HTML onclick을 위한 전역 함수 등록
 window.goBack = goBack;
 window.confirmSend = confirmSend;
-

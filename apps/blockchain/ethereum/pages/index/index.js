@@ -1,8 +1,9 @@
 // Coin 지갑 메인 페이지 로직
+// TODO: 각 코인에 맞게 CoinAdapter를 구현하고 import 경로를 수정하세요
 
 // 전역 변수
-let adapter = null;
-let currentWallet = null;
+let adapter = null; // 코인 어댑터 인스턴스
+let currentWallet = null; // 현재 지갑 정보
 
 // 페이지 초기화
 document.addEventListener("DOMContentLoaded", function () {
@@ -13,9 +14,13 @@ document.addEventListener("DOMContentLoaded", function () {
     console.log("Bridge API available");
   }
 
-  // Solana 어댑터 초기화
+  // Ethereum 어댑터 초기화
   adapter = window.getAdapter();
-  console.log("Solana adapter initialized");
+  
+  if (!adapter) {
+    console.error("EthereumAdapter not initialized");
+    showToast("Failed to initialize Ethereum adapter");
+  }
 
   // UI 테마 적용
   applyTheme();
@@ -43,6 +48,7 @@ function applyTheme() {
   root.style.setProperty("--coin-primary", CoinConfig.theme.primaryColor);
   root.style.setProperty("--coin-secondary", CoinConfig.theme.secondaryColor);
 
+  // 텍스트 변경
   document.querySelectorAll(".logo-text").forEach((el) => {
     el.textContent = CoinConfig.theme.logoText;
   });
@@ -64,7 +70,10 @@ function applyTheme() {
 // 네트워크 상태 확인
 async function checkNetworkStatus() {
   try {
-    // 네트워크 상태 확인
+    // Ethereum 네트워크 상태 확인
+    await adapter.initProvider();
+    const blockNumber = await adapter.getBlockNumber();
+    console.log("Current block number:", blockNumber);
     document.getElementById("network-status").style.color = "#4cff4c";
   } catch (error) {
     console.error("Network connection failed:", error);
@@ -78,6 +87,7 @@ function checkWalletStatus() {
   const walletData = localStorage.getItem(walletKey);
 
   if (walletData) {
+    // 지갑이 있으면 메인 화면 표시
     try {
       currentWallet = JSON.parse(walletData);
 
@@ -92,6 +102,7 @@ function checkWalletStatus() {
       resetWallet();
     }
   } else {
+    // 지갑이 없으면 생성 화면 표시
     document.getElementById("wallet-creation").style.display = "block";
     document.getElementById("wallet-main").style.display = "none";
   }
@@ -114,8 +125,8 @@ async function createWallet() {
     // localStorage에 저장
     const walletData = {
       address: wallet.address,
-      privateKey: wallet.privateKey,
-      mnemonic: wallet.mnemonic,
+      privateKey: wallet.privateKey, // 실제로는 암호화 필요
+      mnemonic: wallet.mnemonic, // 실제로는 암호화 필요
       createdAt: new Date().toISOString(),
     };
 
@@ -124,8 +135,9 @@ async function createWallet() {
     currentWallet = walletData;
 
     console.log("Wallet created:", wallet.address);
-    showToast("Wallet created!");
+    showToast("Wallet created successfully!");
 
+    // 화면 전환
     document.getElementById("wallet-creation").style.display = "none";
     document.getElementById("wallet-main").style.display = "block";
 
@@ -147,7 +159,7 @@ async function importFromMnemonic() {
   const mnemonicInput = document.getElementById("mnemonic-input").value.trim();
 
   if (!mnemonicInput) {
-    showToast("Please enter mnemonic");
+    showToast("Please enter the mnemonic");
     return;
   }
 
@@ -168,8 +180,9 @@ async function importFromMnemonic() {
     localStorage.setItem(walletKey, JSON.stringify(walletData));
     currentWallet = walletData;
 
-    showToast("Wallet imported!");
+    showToast("Wallet imported successfully!");
 
+    // 화면 전환
     document.getElementById("wallet-creation").style.display = "none";
     document.getElementById("wallet-main").style.display = "block";
 
@@ -177,7 +190,7 @@ async function importFromMnemonic() {
     updateBalance();
   } catch (error) {
     console.error("Failed to import wallet:", error);
-    showToast("Please enter valid mnemonic");
+    showToast("Please enter a valid mnemonic");
   }
 }
 
@@ -193,7 +206,7 @@ async function importFromPrivateKey() {
     .value.trim();
 
   if (!privateKeyInput) {
-    showToast("Please enter private key");
+    showToast("Please enter the private key");
     return;
   }
 
@@ -214,8 +227,9 @@ async function importFromPrivateKey() {
     localStorage.setItem(walletKey, JSON.stringify(walletData));
     currentWallet = walletData;
 
-    showToast("Wallet imported!");
+    showToast("Wallet imported successfully!");
 
+    // 화면 전환
     document.getElementById("wallet-creation").style.display = "none";
     document.getElementById("wallet-main").style.display = "block";
 
@@ -223,7 +237,7 @@ async function importFromPrivateKey() {
     updateBalance();
   } catch (error) {
     console.error("Failed to import wallet:", error);
-    showToast("Please enter valid private key");
+    showToast("Please enter a valid private key");
   }
 }
 
@@ -239,10 +253,11 @@ function displayWalletInfo() {
   addressDisplay.textContent = shortAddress;
   addressDisplay.title = address; // 전체 주소는 툴팁으로
 
+  // 클릭 시 전체 주소 복사
   addressDisplay.style.cursor = "pointer";
   addressDisplay.onclick = () => {
     navigator.clipboard.writeText(address);
-    showToast("Address copied");
+    showToast("Address copied to clipboard");
   };
 }
 
@@ -252,14 +267,14 @@ async function updateBalance() {
 
   try {
     const balance = await adapter.getBalance(currentWallet.address);
-    const formattedBalance = window.formatBalance(balance, CoinConfig.decimals);
+    const formattedBalance = window.formatBalance(balance);
 
     document.getElementById("balance-display").textContent = formattedBalance;
 
     // TODO: 실시간 가격 API 연동 필요
     document.getElementById("fiat-value").textContent = "";
   } catch (error) {
-    console.error("Failed to get balance:", error);
+    console.error("Failed to fetch balance:", error);
   }
 }
 
@@ -275,8 +290,7 @@ function navigateToSend() {
   } else if (window.anam && window.anam.navigateTo) {
     window.anam.navigateTo("pages/send/send");
   } else {
-    // 개발 환경: 일반 HTML 페이지 이동
-    window.location.href = "../send/send.html";
+    console.error("navigateTo API not available");
   }
 }
 
@@ -292,8 +306,7 @@ function navigateToReceive() {
   } else if (window.anam && window.anam.navigateTo) {
     window.anam.navigateTo("pages/receive/receive");
   } else {
-    // 개발 환경: 일반 HTML 페이지 이동
-    window.location.href = "../receive/receive.html";
+    console.error("navigateTo API not available");
   }
 }
 
@@ -303,20 +316,36 @@ function resetWallet() {
   localStorage.removeItem(walletKey);
   currentWallet = null;
 
+  // 화면 전환
   document.getElementById("wallet-main").style.display = "none";
   document.getElementById("wallet-creation").style.display = "block";
 
+  // 입력 필드 초기화
   const mnemonicInput = document.getElementById("mnemonic-input");
   const privateKeyInput = document.getElementById("privatekey-input");
   if (mnemonicInput) mnemonicInput.value = "";
   if (privateKeyInput) privateKeyInput.value = "";
 
-  showToast("Wallet reset");
+  showToast("Wallet has been reset");
 }
 
 // 트랜잭션 요청 처리 (Bridge API)
 async function handleTransactionRequest(event) {
   console.log("Transaction request received:", event.detail);
+
+  // 지갑 정보 다시 로드 (BlockchainService 환경에서 실행될 때를 위해)
+  if (!currentWallet) {
+    const walletKey = `${CoinConfig.symbol.toLowerCase()}_wallet`;
+    const walletData = localStorage.getItem(walletKey);
+    if (walletData) {
+      try {
+        currentWallet = JSON.parse(walletData);
+        console.log("Wallet info reloaded");
+      } catch (e) {
+        console.error("Failed to load wallet:", e);
+      }
+    }
+  }
 
   if (!currentWallet || !adapter) {
     console.error("No wallet found");
@@ -327,7 +356,13 @@ async function handleTransactionRequest(event) {
   const requestId = requestData.requestId;
 
   try {
-    // 기본 트랜잭션 파라미터
+    // TODO: 각 코인별로 요청 데이터 파싱 로직을 커스터마이징하세요
+    // 예시:
+    // - Ethereum 형식: {to, amount, data}
+    // - Bitcoin 형식: {recipient, satoshis, memo}
+    // - Solana 형식: {destination, lamports}
+
+    // 기본 트랜잭션 파라미터 (공통)
     const txParams = {
       from: currentWallet.address,
       to: requestData.to || requestData.recipient || requestData.destination,
@@ -335,17 +370,32 @@ async function handleTransactionRequest(event) {
       privateKey: currentWallet.privateKey,
     };
 
+    // Ethereum 추가 파라미터 처리
+    if (requestData.data) {
+      txParams.data = requestData.data;
+    }
+    if (requestData.gasPrice) {
+      txParams.gasPrice = requestData.gasPrice;
+    }
+    if (requestData.gasLimit) {
+      txParams.gasLimit = requestData.gasLimit;
+    }
+
     const result = await adapter.sendTransaction(txParams);
 
+    // 응답 데이터 구성
     const responseData = {
-      hash: result.hash || result.txid || result.signature,
+      txHash: result.hash || result.txid || result.signature, // government24 호환성을 위해 txHash 사용
       from: currentWallet.address,
       to: txParams.to,
       amount: txParams.amount,
+      chainId: CoinConfig.network.chainId, // government24 호환성을 위해 chainId 사용
       network: CoinConfig.network.networkName,
       symbol: CoinConfig.symbol,
+      // TODO: 코인별 추가 응답 데이터
     };
 
+    // Bridge API를 통해 응답 전송
     if (window.anam && window.anam.sendTransactionResponse) {
       window.anam.sendTransactionResponse(
         requestId,
@@ -354,10 +404,12 @@ async function handleTransactionRequest(event) {
       console.log("Transaction response sent:", responseData);
     }
 
+    // UI 업데이트
     setTimeout(updateBalance, 3000);
   } catch (error) {
     console.error("Transaction failed:", error);
 
+    // 에러 응답 전송
     if (window.anam && window.anam.sendTransactionResponse) {
       const errorResponse = {
         error: error.message,
@@ -371,7 +423,6 @@ async function handleTransactionRequest(event) {
     }
   }
 }
-
 
 // HTML onclick을 위한 전역 함수 등록
 window.createWallet = createWallet;

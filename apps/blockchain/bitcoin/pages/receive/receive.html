@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Receive Coin</title>
+    <title>Receive Bitcoin</title>
     <link rel="stylesheet" href="../../app.css" />
     <link rel="stylesheet" href="receive.css" />
   </head>
@@ -17,7 +17,7 @@
               <path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
           </button>
-          <h1 class="header-title">Receive <span class="coin-symbol">COIN</span></h1>
+          <h1 class="header-title">Receive <span class="coin-symbol">BTC</span></h1>
           <div style="width: 24px;"></div>
         </header>
 
@@ -38,7 +38,7 @@
           </div>
 
           <div class="receive-info">
-            <p>You can send <strong class="coin-name">COIN</strong> to this address.</p>
+            <p>You can send <strong class="coin-name">Bitcoin</strong> to this address.</p>
             <p class="receive-warning">Sending other coins may result in loss of funds.</p>
           </div>
         </div>
@@ -46,16 +46,16 @@
     </div>
 
     <!-- 필요한 라이브러리들 -->
+    <!-- 1. 외부 라이브러리 먼저 로드 -->
     <!-- QR 코드 생성 라이브러리 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <!-- Bitcoin 라이브러리 -->
+    <script src="../../assets/bitcoin-bundle.iife.js"></script>
     
-    <!-- Solana Web3.js 번들 -->
-    <script src="../../assets/solana-bundle.umd.cjs"></script>
-    
-    <!-- 설정 및 어댑터 -->
+    <!-- 2. 설정 및 어댑터 (app.js) -->
     <script src="../../app.js"></script>
     
-    <!-- 메인 로직 -->
+    <!-- 3. 페이지별 로직 -->
     <script src="receive.js"></script>
   </body>
 </html>

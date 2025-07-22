@@ -57,7 +57,7 @@ function updateUI() {
 // QR 코드 생성
 function generateQRCode() {
   const qrContainer = document.getElementById('qr-code');
-  qrContainer.innerHTML = '';
+  qrContainer.innerHTML = ''; // 기존 QR 코드 제거
   
   try {
     // QRCode.js 라이브러리 사용
@@ -71,7 +71,7 @@ function generateQRCode() {
     });
   } catch (error) {
     console.error('Failed to generate QR code:', error);
-    qrContainer.innerHTML = '<div style="padding: 20px; color: #999;">QR Code Generation Failed</div>';
+    qrContainer.innerHTML = '<div style="padding: 20px; color: #999;">Failed to generate QR code</div>';
   }
 }
 
@@ -83,8 +83,7 @@ function goBack() {
   } else if (window.anam && window.anam.navigateTo) {
     window.anam.navigateTo('pages/index/index');
   } else {
-    // 개발 환경: 일반 HTML 페이지 이동
-    window.location.href = '../index/index.html';
+    console.error("navigateTo API not available");
   }
 }
 
@@ -94,7 +93,7 @@ function copyAddress() {
 
   navigator.clipboard.writeText(currentWallet.address)
     .then(() => {
-      showToast("Address copied");
+      showToast("Address copied to clipboard");
     })
     .catch(err => {
       console.error('Copy failed:', err);
@@ -105,4 +104,3 @@ function copyAddress() {
 // HTML onclick을 위한 전역 함수 등록
 window.goBack = goBack;
 window.copyAddress = copyAddress;
-

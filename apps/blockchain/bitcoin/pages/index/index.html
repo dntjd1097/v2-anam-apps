@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Coin Wallet</title>
+    <title>Bitcoin Wallet</title>
     <link rel="stylesheet" href="../../app.css" />
     <link rel="stylesheet" href="index.css" />
   </head>
@@ -12,9 +12,9 @@
       <!-- 지갑 생성 화면 -->
       <div id="wallet-creation" class="wallet-screen" style="display: none;">
         <div class="creation-content">
-          <img src="../../assets/icons/app_icon.png" alt="Coin Logo" class="coin-logo-large" />
-          <h1 class="creation-title">Coin Wallet</h1>
-          <p class="creation-description">Create a secure Coin wallet</p>
+          <img src="../../assets/icons/app_icon.png" alt="Bitcoin Logo" class="coin-logo-large" />
+          <h1 class="creation-title">Bitcoin Wallet</h1>
+          <p class="creation-description">Create a secure Bitcoin wallet</p>
           
           <button class="create-wallet-btn" onclick="createWallet()">
             Create New Wallet
@@ -64,10 +64,10 @@
         <header class="header">
           <div class="header-content">
             <div class="logo">
-              <img src="../../assets/icons/app_icon.png" alt="Coin Logo" class="coin-logo" />
-              <span class="logo-text">Coin</span>
+              <img src="../../assets/icons/app_icon.png" alt="Bitcoin Logo" class="coin-logo" />
+              <span class="logo-text">Bitcoin</span>
             </div>
-            <button class="reset-wallet-btn" onclick="resetWallet()" title="Reset Wallet">
+            <button class="reset-wallet-btn" onclick="resetWallet()" title="Reset wallet">
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M2.5 10C2.5 14.1421 5.85786 17.5 10 17.5C14.1421 17.5 17.5 14.1421 17.5 10C17.5 5.85786 14.1421 2.5 10 2.5C7.51088 2.5 5.31615 3.76957 4.01111 5.68889L5.55556 5.68889" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
@@ -84,7 +84,7 @@
           <div class="balance-amount">
             <div class="coin-balance">
               <span id="balance-display">0.0000</span>
-              <span class="coin-unit">COIN</span>
+              <span class="coin-unit">BTC</span>
             </div>
             <div class="fiat-value" id="fiat-value">≈ $0.00</div>
           </div>
@@ -112,13 +112,13 @@
     </div>
 
     <!-- 필요한 라이브러리들 -->
-    <!-- Solana Web3.js 번들 -->
-    <script src="../../assets/solana-bundle.umd.cjs"></script>
+    <!-- 1. 외부 라이브러리 먼저 로드 -->
+    <script src="../../assets/bitcoin-bundle.iife.js"></script>
     
-    <!-- 설정 및 어댑터 -->
+    <!-- 2. 설정 및 어댑터 (app.js) -->
     <script src="../../app.js"></script>
     
-    <!-- 메인 로직 -->
+    <!-- 3. 페이지별 로직 -->
     <script src="index.js"></script>
   </body>
 </html>

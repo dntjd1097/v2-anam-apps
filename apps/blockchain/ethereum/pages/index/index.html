@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -9,7 +9,7 @@
   </head>
   <body>
     <div class="container">
-      <!-- 지갑 생성 화면 -->
+      <!-- Wallet Creation Screen -->
       <div id="wallet-creation" class="wallet-screen" style="display: none;">
         <div class="creation-content">
           <img src="../../assets/icons/app_icon.png" alt="Coin Logo" class="coin-logo-large" />
@@ -27,7 +27,7 @@
           <div class="import-section">
             <h3>Import Wallet</h3>
             
-            <!-- 니모닉 가져오기 -->
+            <!-- Import from Mnemonic -->
             <div class="import-option" id="mnemonic-import">
               <h4>Recover with Mnemonic</h4>
               <textarea 
@@ -37,11 +37,11 @@
                 rows="3"
               ></textarea>
               <button class="import-btn" onclick="importFromMnemonic()">
-                Import with Mnemonic
+                Import from Mnemonic
               </button>
             </div>
             
-            <!-- 개인키 가져오기 -->
+            <!-- Import from Private Key -->
             <div class="import-option" id="privatekey-import">
               <h4>Recover with Private Key</h4>
               <input 
@@ -51,16 +51,16 @@
                 placeholder="Enter your private key"
               />
               <button class="import-btn" onclick="importFromPrivateKey()">
-                Import with Private Key
+                Import from Private Key
               </button>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- 메인 지갑 화면 -->
+      <!-- Main Wallet Screen -->
       <div id="wallet-main" class="wallet-screen" style="display: none;">
-        <!-- 헤더 -->
+        <!-- Header -->
         <header class="header">
           <div class="header-content">
             <div class="logo">
@@ -75,7 +75,7 @@
           </div>
         </header>
 
-        <!-- 잔액 카드 -->
+        <!-- Balance Card -->
         <div class="card balance-card">
           <div class="balance-header">
             <span class="balance-label">Mainnet</span>
@@ -89,7 +89,7 @@
             <div class="fiat-value" id="fiat-value">≈ $0.00</div>
           </div>
           
-          <!-- 주소 표시 -->
+          <!-- Address Display -->
           <div class="address-container">
             <div class="address-label">Address</div>
             <div class="address-display" id="address-display">
@@ -97,7 +97,7 @@
             </div>
           </div>
           
-          <!-- 액션 버튼들 -->
+          <!-- Action Buttons -->
           <div class="action-buttons">
             <button class="action-btn" onclick="navigateToSend()">
               <span>Send</span>
@@ -111,14 +111,14 @@
 
     </div>
 
-    <!-- 필요한 라이브러리들 -->
-    <!-- Solana Web3.js 번들 -->
-    <script src="../../assets/solana-bundle.umd.cjs"></script>
+    <!-- Required Libraries -->
+    <!-- Ethers.js Library -->
+    <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
     
-    <!-- 설정 및 어댑터 -->
+    <!-- App Common Code -->
     <script src="../../app.js"></script>
     
-    <!-- 메인 로직 -->
+    <!-- Main Logic -->
     <script src="index.js"></script>
   </body>
 </html>

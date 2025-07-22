@@ -5,51 +5,52 @@
 // Coin 설정
 const CoinConfig = {
   // 기본 정보
-  name: "Solana",
-  symbol: "SOL",
-  decimals: 9,
-
+  name: "Ethereum",
+  symbol: "ETH",
+  decimals: 18,
+  
   // 네트워크 설정
   network: {
-    // QuickNode RPC 엔드포인트
-    rpcEndpoint:
-      "https://methodical-few-slug.solana-testnet.quiknode.pro/ced6f6658c56f53433e198c2124918a0e6dd6b0d",
+    // QuickNode RPC 엔드포인트 (Sepolia 테스트넷)
+    rpcEndpoint: "https://still-fluent-yard.ethereum-sepolia.quiknode.pro/ed1e699042dab42a0b3d7d6c7f059eaaef2cc930/",
     // 네트워크 이름
-    networkName: "testnet", // 예: "mainnet", "testnet"
-    // Solana는 chainId 대신 cluster 사용
-    cluster: "testnet",
+    networkName: "sepolia",
+    // 체인 ID
+    chainId: 11155111,  // Sepolia testnet
   },
-
+  
   // UI 테마 설정
   theme: {
-    primaryColor: "#14F195", // 메인 색상 (Solana Green)
-    secondaryColor: "#9945FF", // 보조 색상 (Solana Purple)
-    logoText: "Solana", // 로고 텍스트
+    primaryColor: "#4338CA",      // 이더리움 보라색
+    secondaryColor: "#6366F1",    // 밝은 보라색
+    logoText: "Ethereum",
   },
-
+  
   // 주소 설정
   address: {
     // 주소 형식 정규식 (검증용)
-    regex: /^[1-9A-HJ-NP-Za-km-z]{32,44}$/,
+    regex: /^0x[a-fA-F0-9]{40}$/,
     // 주소 표시 형식
-    displayFormat: "...", // Base58 형식
+    displayFormat: "0x...",
   },
-
+  
   // 트랜잭션 설정
   transaction: {
-    // 기본 가스비/수수료
-    defaultFee: "0.000005", // 5000 lamports
+    // 기본 가스비
+    defaultGasLimit: 21000,
+    // 기본 가스 가격 (gwei)
+    defaultGasPrice: "20",
     // 최소 전송 금액
     minAmount: "0.000001",
     // 확인 대기 시간 (ms)
     confirmationTime: 15000,
   },
-
+  
   // 기타 옵션
   options: {
     // 니모닉 지원 여부
     supportsMnemonic: true,
-    // 토큰 지원 여부 (SPL 토큰)
+    // 토큰 지원 여부  
     supportsTokens: true,
     // QR 코드 지원
     supportsQRCode: true,
@@ -215,7 +216,7 @@ const AppState = {
 window.App = {
   // 앱 시작 시 호출 (최초 1회)
   onLaunch(options) {
-    console.log("MiniApp started:", options);
+    console.log("Mini app started:", options);
 
     this.initializeApp();
 
@@ -226,7 +227,7 @@ window.App = {
 
   // 앱이 포그라운드로 전환될 때
   onShow(options) {
-    console.log("MiniApp activated:", options);
+    console.log("Mini app activated:", options);
 
     if (AppState.walletData?.address) {
       this.refreshBalance();
@@ -237,12 +238,12 @@ window.App = {
 
   // 앱이 백그라운드로 전환될 때
   onHide() {
-    console.log("MiniApp deactivated");
+    console.log("Mini app deactivated");
   },
 
   // 앱 오류 발생 시
   onError(error) {
-    console.error("MiniApp error:", error);
+    console.error("Mini app error:", error);
   },
 
   // ================================================================
@@ -261,7 +262,7 @@ window.App = {
     const required = ["name", "symbol", "network"];
     for (const field of required) {
       if (!CoinConfig[field]) {
-        throw new Error(`Required config missing: ${field}`);
+        throw new Error(`Required configuration missing: ${field}`);
       }
     }
   },
@@ -315,7 +316,7 @@ window.App = {
       );
       console.log("Balance updated:", balance);
     } catch (e) {
-      console.error("Failed to get balance:", e);
+      console.error("Failed to fetch balance:", e);
     }
   },
 };
@@ -378,219 +379,190 @@ window.shortenAddress = (address, chars = 4) => {
 };
 
 // ================================================================
-// Solana Adapter 구현
+// Ethereum Adapter 구현
 // ================================================================
 
-// Solana 어댑터 구현
-class SolanaAdapter extends CoinAdapter {
+class EthereumAdapter extends CoinAdapter {
   constructor(config) {
     super(config);
-    this.connection = null;
-    this.solanaWeb3 = window.solanaWeb3;
+    this.provider = null;
   }
 
-  // RPC 연결 초기화
+  // Provider 초기화
   async initProvider() {
-    if (!this.connection) {
-      this.connection = new this.solanaWeb3.Connection(
-        this.config.network.rpcEndpoint,
-        "confirmed"
-      );
+    if (!this.provider && typeof ethers !== 'undefined') {
+      this.provider = new ethers.providers.JsonRpcProvider(this.config.network.rpcEndpoint);
     }
-    return this.connection;
+    return this.provider;
   }
 
-  // 새 지갑 생성
+  /* ================================================================
+   * 1. 지갑 생성 및 관리
+   * ================================================================ */
+
   async generateWallet() {
-    // 니모닉 생성
-    const mnemonic = this.solanaWeb3.generateMnemonic();
-
-    // 니모닉으로부터 키페어 생성
-    const keypair = this.solanaWeb3.keypairFromMnemonic(mnemonic);
-
+    const wallet = ethers.Wallet.createRandom();
+    
     return {
-      address: keypair.publicKey.toString(),
-      privateKey: Array.from(keypair.secretKey, (byte) =>
-        byte.toString(16).padStart(2, "0")
-      ).join(""),
-      mnemonic: mnemonic,
-      publicKey: keypair.publicKey.toString(),
+      address: wallet.address,
+      privateKey: wallet.privateKey,
+      mnemonic: wallet.mnemonic.phrase
     };
   }
 
-  // 니모닉으로 지갑 복구
   async importFromMnemonic(mnemonic) {
     try {
-      // 니모닉 유효성 검사
-      if (!this.solanaWeb3.bip39.validateMnemonic(mnemonic)) {
-        throw new Error("Invalid mnemonic");
-      }
-
-      // 니모닉으로부터 키페어 복구
-      const keypair = this.solanaWeb3.keypairFromMnemonic(mnemonic);
-
+      const wallet = ethers.Wallet.fromMnemonic(mnemonic);
       return {
-        address: keypair.publicKey.toString(),
-        privateKey: Array.from(keypair.secretKey, (byte) =>
-          byte.toString(16).padStart(2, "0")
-        ).join(""),
-        mnemonic: mnemonic,
-        publicKey: keypair.publicKey.toString(),
+        address: wallet.address,
+        privateKey: wallet.privateKey
       };
     } catch (error) {
-      throw new Error(error.message || "Failed to recover from mnemonic");
+      throw new Error("Invalid mnemonic: " + error.message);
     }
   }
 
-  // 개인키로 지갑 가져오기
   async importFromPrivateKey(privateKey) {
     try {
-      // Hex string을 Uint8Array로 변환
-      const secretKey = Uint8Array.from(
-        privateKey.match(/.{1,2}/g).map((byte) => parseInt(byte, 16))
-      );
-
-      const keypair = this.solanaWeb3.Keypair.fromSecretKey(secretKey);
-
+      const wallet = new ethers.Wallet(privateKey);
       return {
-        address: keypair.publicKey.toString(),
-        privateKey: privateKey,
-        publicKey: keypair.publicKey.toString(),
+        address: wallet.address
       };
     } catch (error) {
-      throw new Error("Invalid private key");
+      throw new Error("Invalid private key: " + error.message);
     }
   }
 
-  // 잔액 조회
-  async getBalance(address) {
-    try {
-      await this.initProvider();
-      const publicKey = new this.solanaWeb3.PublicKey(address);
-      const balance = await this.connection.getBalance(publicKey);
-      return balance.toString();
-    } catch (error) {
-      console.error("Failed to get balance:", error);
-      return "0";
-    }
-  }
-
-  // 주소 유효성 검사
   isValidAddress(address) {
-    try {
-      new this.solanaWeb3.PublicKey(address);
-      return true;
-    } catch (error) {
-      return false;
-    }
+    return ethers.utils.isAddress(address);
   }
 
-  // 트랜잭션 전송
+  /* ================================================================
+   * 2. 잔액 조회
+   * ================================================================ */
+
+  async getBalance(address) {
+    await this.initProvider();
+    const balance = await this.provider.getBalance(address);
+    return balance.toString(); // Wei 단위 BigNumber를 문자열로
+  }
+
+  /* ================================================================
+   * 3. 트랜잭션 처리
+   * ================================================================ */
+
   async sendTransaction(params) {
-    const { to, amount, privateKey } = params;
-
-    if (!this.isValidAddress(to)) {
-      throw new Error("Invalid address");
+    await this.initProvider();
+    
+    const wallet = new ethers.Wallet(params.privateKey, this.provider);
+    
+    const tx = {
+      to: params.to,
+      value: ethers.utils.parseEther(params.amount),
+      gasLimit: params.gasLimit || this.config.transaction.defaultGasLimit,
+      gasPrice: ethers.utils.parseUnits(params.gasPrice || this.config.transaction.defaultGasPrice, 'gwei')
+    };
+    
+    if (params.data) {
+      tx.data = params.data;
     }
-
-    try {
-      await this.initProvider();
-
-      // 개인키로 키페어 복구
-      const secretKey = Uint8Array.from(
-        privateKey.match(/.{1,2}/g).map((byte) => parseInt(byte, 16))
-      );
-      const fromKeypair = this.solanaWeb3.Keypair.fromSecretKey(secretKey);
-
-      // 트랜잭션 생성
-      const transaction = new this.solanaWeb3.Transaction().add(
-        this.solanaWeb3.SystemProgram.transfer({
-          fromPubkey: fromKeypair.publicKey,
-          toPubkey: new this.solanaWeb3.PublicKey(to),
-          lamports: Math.floor(
-            parseFloat(amount) * this.solanaWeb3.LAMPORTS_PER_SOL
-          ),
-        })
-      );
-
-      // 트랜잭션 전송
-      const signature = await this.solanaWeb3.sendAndConfirmTransaction(
-        this.connection,
-        transaction,
-        [fromKeypair]
-      );
-
-      console.log("Solana transaction sent:", signature);
-
-      return {
-        hash: signature,
-        signature: signature,
-      };
-    } catch (error) {
-      console.error("Transaction send failed:", error);
-      throw new Error(error.message || "Failed to send transaction");
-    }
+    
+    const transaction = await wallet.sendTransaction(tx);
+    
+    return {
+      hash: transaction.hash
+    };
   }
 
-  // 블록 번호 조회 (Solana는 slot 사용)
-  async getBlockNumber() {
-    try {
-      await this.initProvider();
-      const slot = await this.connection.getSlot();
-      return slot;
-    } catch (error) {
-      console.error("Failed to get slot:", error);
-      return 0;
-    }
-  }
-
-  // ================================================================
-  // 미구현 메서드 (Abstract)
-  // ================================================================
-
-  /**
-   * 트랜잭션 상태 조회 - 미구현
-   * @param {string} txHash - 트랜잭션 해시
-   * @returns {Promise<{status: string, confirmations: number}>}
-   */
   async getTransactionStatus(txHash) {
-    throw new Error(
-      "getTransactionStatus() method is not implemented yet."
-    );
+    await this.initProvider();
+    
+    const receipt = await this.provider.getTransactionReceipt(txHash);
+    
+    if (!receipt) {
+      return {
+        status: 'pending',
+        confirmations: 0
+      };
+    }
+    
+    const currentBlock = await this.provider.getBlockNumber();
+    
+    return {
+      status: receipt.status === 1 ? 'confirmed' : 'failed',
+      confirmations: currentBlock - receipt.blockNumber
+    };
   }
 
-  /**
-   * 현재 네트워크 수수료 조회 - 미구현
-   * @returns {Promise<{low: string, medium: string, high: string}>}
-   */
+  /* ================================================================
+   * 4. 수수료 관련
+   * ================================================================ */
+
   async getGasPrice() {
-    throw new Error("getGasPrice() method is not implemented yet.");
+    await this.initProvider();
+    
+    const gasPrice = await this.provider.getGasPrice();
+    const gasPriceGwei = ethers.utils.formatUnits(gasPrice, 'gwei');
+    
+    return {
+      low: (parseFloat(gasPriceGwei) * 0.8).toFixed(2),
+      medium: gasPriceGwei,
+      high: (parseFloat(gasPriceGwei) * 1.5).toFixed(2)
+    };
   }
 
-  /**
-   * 트랜잭션 수수료 예상 - 미구현
-   * @param {Object} txParams - 트랜잭션 파라미터
-   * @returns {Promise<string>} - 예상 수수료
-   */
   async estimateFee(txParams) {
-    throw new Error("estimateFee() method is not implemented yet.");
+    await this.initProvider();
+    
+    const gasLimit = txParams.gasLimit || this.config.transaction.defaultGasLimit;
+    const gasPrice = await this.provider.getGasPrice();
+    
+    const fee = gasPrice.mul(gasLimit);
+    return ethers.utils.formatEther(fee);
+  }
+
+  /* ================================================================
+   * 5. 이더리움 특화 기능
+   * ================================================================ */
+
+  // 현재 블록 번호 조회
+  async getBlockNumber() {
+    await this.initProvider();
+    return await this.provider.getBlockNumber();
+  }
+
+  // 네트워크 정보 조회
+  async getNetwork() {
+    await this.initProvider();
+    return await this.provider.getNetwork();
+  }
+
+  // ENS 이름 해석
+  async resolveENS(ensName) {
+    await this.initProvider();
+    try {
+      const address = await this.provider.resolveName(ensName);
+      return address;
+    } catch (error) {
+      return null;
+    }
   }
 }
 
-// 어댑터 내보내기
-if (typeof module !== "undefined" && module.exports) {
-  module.exports = SolanaAdapter;
+// 내보내기
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = EthereumAdapter;
 } else {
-  window.SolanaAdapter = SolanaAdapter;
+  window.EthereumAdapter = EthereumAdapter;
 }
 
 // ================================================================
 // 앱 초기화
 // ================================================================
 
-// Solana Adapter 인스턴스 생성 및 등록
-const solanaAdapter = new SolanaAdapter(CoinConfig);
-window.setAdapter(solanaAdapter);
+// Ethereum Adapter 인스턴스 생성 및 등록
+const ethereumAdapter = new EthereumAdapter(CoinConfig);
+window.setAdapter(ethereumAdapter);
 
 // 앱 시작 시 호출
 if (window.App && window.App.onLaunch) {

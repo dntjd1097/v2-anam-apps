@@ -10,7 +10,7 @@
   <body>
     <div class="container">
       <div class="send-screen">
-        <!-- 헤더 -->
+        <!-- Header -->
         <header class="header">
           <button class="back-btn" onclick="goBack()">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -21,7 +21,7 @@
           <div style="width: 24px;"></div>
         </header>
 
-        <!-- 폼 내용 -->
+        <!-- Form Content -->
         <div class="send-content">
           <div class="form-group">
             <label for="recipient-address">Recipient Address</label>
@@ -63,14 +63,14 @@
       </div>
     </div>
 
-    <!-- 필요한 라이브러리들 -->
-    <!-- Solana Web3.js 번들 -->
-    <script src="../../assets/solana-bundle.umd.cjs"></script>
+    <!-- Required Libraries -->
+    <!-- Ethers.js Library -->
+    <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
     
-    <!-- 설정 및 어댑터 -->
+    <!-- App Common Code -->
     <script src="../../app.js"></script>
     
-    <!-- 메인 로직 -->
+    <!-- Main Logic -->
     <script src="send.js"></script>
   </body>
 </html>
