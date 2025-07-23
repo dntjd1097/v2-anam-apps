@@ -139,7 +139,8 @@ async function createWallet() {
 
     // 화면 전환
     document.getElementById("wallet-creation").style.display = "none";
-    document.getElementById("wallet-main").style.display = "block";
+    document.getElementById("wallet-main").style.display = "none";
+    document.getElementById("mnemonic-check").style.display = "block";
 
     displayWalletInfo();
     updateBalance();
@@ -241,6 +242,15 @@ async function importFromPrivateKey() {
   }
 }
 
+function showMnemonic() {
+  if (!currentWallet || !currentWallet.mnemonic) {
+    showToast("No wallet found");
+    return;
+  }
+  const outputDiv = document.getElementById("mnemonic-show");
+  outputDiv.textContent = currentWallet.mnemonic;
+}
+
 // 지갑 정보 표시
 function displayWalletInfo() {
   if (!currentWallet || !adapter) return;
@@ -290,7 +300,7 @@ function navigateToSend() {
   } else if (window.anam && window.anam.navigateTo) {
     window.anam.navigateTo("pages/send/send");
   } else {
-    console.error("navigateTo API not available");
+    window.location.href = "../send/send.html";
   }
 }
 
@@ -306,7 +316,7 @@ function navigateToReceive() {
   } else if (window.anam && window.anam.navigateTo) {
     window.anam.navigateTo("pages/receive/receive");
   } else {
-    console.error("navigateTo API not available");
+    window.location.href = "../receive/receive.html";
   }
 }
 
@@ -430,4 +440,5 @@ window.importFromMnemonic = importFromMnemonic;
 window.importFromPrivateKey = importFromPrivateKey;
 window.navigateToSend = navigateToSend;
 window.navigateToReceive = navigateToReceive;
+window.showMnemonic = showMnemonic;
 window.resetWallet = resetWallet;
