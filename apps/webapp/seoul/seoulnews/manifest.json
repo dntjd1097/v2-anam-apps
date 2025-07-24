@@ -1,0 +1,5 @@
+{
+  "name": "Seoul News",
+  "icon": "assets/icons/app_icon.png",
+  "pages": ["pages/index/index"]
+}

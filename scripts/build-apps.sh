@@ -98,12 +98,26 @@ else
     echo "  ⚠️  No blockchain apps directory found"
 fi
 
-# 2. WebApp 빌드
+# 2. WebApp 빌드 (하위 폴더 구조 지원)
 echo "🌐 Building Web Apps..."
 if [ -d "$APPS_DIR/webapp" ]; then
+    # 직접 webapp 폴더에 있는 앱들 빌드
     for app in "$APPS_DIR/webapp"/*; do
-        if [ -d "$app" ]; then
+        if [ -d "$app" ] && [ -f "$app/manifest.json" ]; then
             build_app "$app"
+        fi
+    done
+    
+    # 하위 폴더 (anam, busan, la, seoul, etc)에 있는 앱들 빌드
+    for region in "$APPS_DIR/webapp"/*; do
+        if [ -d "$region" ] && [ ! -f "$region/manifest.json" ]; then
+            local region_name=$(basename "$region")
+            echo "📁 Building apps in $region_name..."
+            for app in "$region"/*; do
+                if [ -d "$app" ] && [ -f "$app/manifest.json" ]; then
+                    build_app "$app"
+                fi
+            done
         fi
     done
 else
