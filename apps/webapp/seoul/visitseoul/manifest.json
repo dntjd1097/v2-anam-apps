@@ -1,4 +1,7 @@
 {
+  "app_id": "com.seoul.visitseoul",
+  "type": "app",
+  "version": "1.0.0",
   "name": "Visit Seoul",
   "icon": "assets/icons/app_icon.png",
   "pages": ["pages/index/index"]

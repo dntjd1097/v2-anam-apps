@@ -1,8 +1,8 @@
 {
-  "app_id": "kr.go.government24",
+  "app_id": "com.anam.government24",
   "type": "app",
-  "name": "Government24",
   "version": "1.0.0",
+  "name": "Government24",
   "icon": "assets/icons/app_icon.png",
   "pages": [
     "pages/index/index",

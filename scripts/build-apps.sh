@@ -36,11 +36,13 @@ build_app() {
         return 1
     fi
     
-    # manifest.json 필수 필드 검증 (jq가 있을 경우)
+    # manifest.json 필수 필드 검증 및 app_id, version 추출
     if command -v jq &> /dev/null; then
         local name=$(jq -r '.name // empty' "$app_path/manifest.json")
         local icon=$(jq -r '.icon // empty' "$app_path/manifest.json")
         local pages=$(jq -r '.pages // empty' "$app_path/manifest.json")
+        local app_id=$(jq -r '.app_id // empty' "$app_path/manifest.json")
+        local version=$(jq -r '.version // empty' "$app_path/manifest.json")
         
         if [ -z "$name" ] || [ -z "$icon" ] || [ -z "$pages" ]; then
             echo "    ❌ manifest.json missing required fields (name, icon, or pages)!"
@@ -61,11 +63,22 @@ build_app() {
             ((FAIL_COUNT++))
             return 1
         fi
+        
+        # ZIP 파일명 결정 (app_id와 version이 있으면 사용, 없으면 폴더명 사용)
+        local zip_filename
+        if [ -n "$app_id" ] && [ -n "$version" ]; then
+            zip_filename="${app_id}_${version}.zip"
+        else
+            zip_filename="${app_name}.zip"
+        fi
+    else
+        # jq가 없는 경우 기본 파일명 사용
+        local zip_filename="${app_name}.zip"
     fi
     
     # ZIP 파일 생성 (app 디렉토리 내에서 실행하여 루트 레벨 구조 보장)
     cd "$app_path"
-    zip -r "$ZIP_DIR/${app_name}.zip" . \
+    zip -r "$ZIP_DIR/${zip_filename}" . \
         -x "*.DS_Store" \
         -x ".git/*" \
         -x "node_modules/*" \
@@ -76,7 +89,7 @@ build_app() {
         > /dev/null 2>&1
     
     if [ $? -eq 0 ]; then
-        echo "    ✅ Success: ${app_name}.zip"
+        echo "    ✅ Success: ${zip_filename}"
         ((SUCCESS_COUNT++))
     else
         echo "    ❌ Failed to create ZIP!"

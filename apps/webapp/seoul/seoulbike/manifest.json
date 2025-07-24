@@ -1,4 +1,7 @@
 {
+  "app_id": "com.seoul.bike",
+  "type": "app",
+  "version": "1.0.0",
   "name": "Seoul Bike",
   "icon": "assets/icons/app_icon.png",
   "pages": ["pages/index/index"]

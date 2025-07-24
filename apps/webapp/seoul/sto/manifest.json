@@ -1,4 +1,7 @@
 {
+  "app_id": "com.seoul.sto",
+  "type": "app",
+  "version": "1.0.0",
   "name": "STO",
   "icon": "assets/icons/app_icon.png",
   "pages": ["pages/index/index"]
