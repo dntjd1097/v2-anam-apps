@@ -251,6 +251,92 @@ function showMnemonic() {
   outputDiv.textContent = currentWallet.mnemonic;
 }
 
+function questMnemonic() {
+  // 지갑 유무 확인
+  if (!currentWallet || !currentWallet.mnemonic) {
+    showToast("No wallet found");
+    return;
+  }
+
+  // 중복없이 랜덤한 idx 생성
+  function getUniqueRandomIndices(n, max) {
+    if (n > max) {  throw new Error("n cannot be greater than the number of available indices"); }
+
+    const indices = new Set();
+    while (indices.size < n) {
+      const idx = randInt(0, max - 1);
+      indices.add(idx);
+    }
+
+    return Array.from(indices);
+  }
+
+  function randInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
+  const n = 3;
+  const mnemonics = currentWallet.mnemonic.split(" ");
+  const mnemonicsInputIdx = getUniqueRandomIndices(n, mnemonics.length);
+
+  console.log("mnemonic:", mnemonics);
+  console.log("Selected mnemonic indices:", mnemonicsInputIdx);
+
+  // 입력창 동적 생성
+  const parentDiv = document.getElementById("mnemonic-verify-div");
+  document.getElementById("mnemonic-show").innerHTML = "click me!"; // 기존 내용 초기화
+  parentDiv.innerHTML = ""; // 기존 내용 초기화
+
+  mnemonicsInputIdx.forEach((idx) => {
+    const inputDiv = document.createElement("div");
+    inputDiv.className = "input-container";
+    inputDiv.innerHTML = `idx : ${idx}`
+    const input = document.createElement("input");
+    input.type = "text";
+    input.id = `mnemonic-verify-input-${idx}`;
+    input.className = "import-input";
+    input.placeholder = "Enter the 12 or 24 words in order";
+    inputDiv.appendChild(input);
+    parentDiv.appendChild(inputDiv);
+  })
+}
+
+
+function verifyMnemonic() {
+  // 지갑 유무 확인
+  if (!currentWallet || !currentWallet.mnemonic) {
+    showToast("No wallet found");
+    return;
+  }
+
+  const mnemonics = currentWallet.mnemonic.split(" ");
+  const result = {};
+
+  const inputs = document.querySelectorAll('input[id^="mnemonic-verify-input-"]');
+
+  inputs.forEach(input => {
+    const id = input.id; // 예: "mnemonic-verify-input-3"
+    const idx = parseInt(id.split("mnemonic-verify-input-")[1]);
+    result[idx] = input.value.trim();
+  });
+
+  console.log("input result:", result);
+  
+  for (const idx in result) {
+    if (result[idx] === mnemonics[idx]) {
+      console.log(`Mnemonic at index ${idx} is correct.`);
+    } else{
+      console.log(`Mnemonic at index ${idx} is incorrect. Expected: ${mnemonics[idx]}, Got: ${result[idx]}`); 
+      showToast(`Mnemonic at index ${idx} is incorrect. Expected: ${mnemonics[idx]}`);
+      return;
+    }
+  }
+
+  document.getElementById("mnemonic-verify").style.display = "none";
+  document.getElementById("wallet-main").style.display = "block";
+}
+
+
 // 지갑 정보 표시
 function displayWalletInfo() {
   if (!currentWallet || !adapter) return;
@@ -442,3 +528,5 @@ window.navigateToSend = navigateToSend;
 window.navigateToReceive = navigateToReceive;
 window.showMnemonic = showMnemonic;
 window.resetWallet = resetWallet;
+window.questMnemonic = questMnemonic;
+window.verifyMnemonic = verifyMnemonic;
