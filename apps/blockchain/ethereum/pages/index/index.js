@@ -91,6 +91,12 @@ function checkWalletStatus() {
     try {
       currentWallet = JSON.parse(walletData);
 
+      // 니모닉 확인 여부 체크
+      if(localStorage.getItem("mnemonc_verified") === "false"){
+        createWallet()
+        // throw new Error("Mnemonic not verified");
+      }
+
       document.getElementById("wallet-creation").style.display = "none";
       document.getElementById("wallet-main").style.display = "block";
 
@@ -142,6 +148,9 @@ async function createWallet() {
     document.getElementById("wallet-main").style.display = "none";
     document.getElementById("mnemonic-check").style.display = "block";
 
+    // 니모닉 확인 여부 init
+    localStorage.setItem("mnemonc_verified", false);
+
     displayWalletInfo();
     updateBalance();
   } catch (error) {
@@ -182,6 +191,9 @@ async function importFromMnemonic() {
     currentWallet = walletData;
 
     showToast("Wallet imported successfully!");
+
+    // 니모닉 확인 여부 갱신
+    localStorage.setItem("mnemonc_verified", true);
 
     // 화면 전환
     document.getElementById("wallet-creation").style.display = "none";
@@ -229,6 +241,9 @@ async function importFromPrivateKey() {
     currentWallet = walletData;
 
     showToast("Wallet imported successfully!");
+
+    // 니모닉 확인 여부 갱신
+    localStorage.setItem("mnemonc_verified", true);
 
     // 화면 전환
     document.getElementById("wallet-creation").style.display = "none";
@@ -331,6 +346,8 @@ function verifyMnemonic() {
       return;
     }
   }
+  // 니모닉 확인 여부 갱신
+  localStorage.setItem("mnemonc_verified", true);
 
   document.getElementById("mnemonic-verify").style.display = "none";
   document.getElementById("wallet-main").style.display = "block";
@@ -339,7 +356,7 @@ function verifyMnemonic() {
 
 // 지갑 정보 표시
 function displayWalletInfo() {
-  if (!currentWallet || !adapter) return;
+  if (!currentWallet || !adapter) return;  
 
   const address = currentWallet.address;
   const addressDisplay = document.getElementById("address-display");
@@ -410,6 +427,7 @@ function navigateToReceive() {
 function resetWallet() {
   const walletKey = `${CoinConfig.symbol.toLowerCase()}_wallet`;
   localStorage.removeItem(walletKey);
+  localStorage.removeItem("mnemonc_verified");
   currentWallet = null;
 
   // 화면 전환
