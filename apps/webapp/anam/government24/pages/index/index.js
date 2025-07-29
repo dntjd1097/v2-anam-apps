@@ -12,7 +12,7 @@ function handleLogin() {
   // VP 요청 생성 및 저장
   vpRequest = {
     service: "Government24",
-    purpose: "정부24 서비스 이용을 위한 본인인증",
+    purpose: "Authentication for Government24 service",
     challenge: "gov24_" + Date.now(),
     type: "both", // 학생증, 운전면허증 모두 가능
   };
