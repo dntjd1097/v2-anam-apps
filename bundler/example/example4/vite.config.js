@@ -14,11 +14,6 @@ export default defineConfig({
     },
 
     minify: "terser", // JS 코드를 압축 및 최적화 (공백 제거, 변수 축소 등)
-    terserOptions: {
-      compress: {
-        drop_console: true, // 프로덕션에서 console.log 제거
-      },
-    },
 
     // console.log 제거 설정, 개발중에 디버그 할때 false 두면 됨
     terserOptions: {
@@ -30,7 +25,7 @@ export default defineConfig({
     // 출력 디렉토리
     outDir: "dist",
 
-    // 기존 파일 정리 - 권장!
-    emptyOutDir: true, // 깨끗한 빌드 보장
+    // 기존 파일 정리
+    emptyOutDir: true,
   },
 });

@@ -10,7 +10,7 @@ export default {
   // 커스텀 메서드
   wallet: {
     create: () => {
-      const mnemonic = bip39.generateMnemonic(); // 클로저
+      const mnemonic = bip39.generateMnemonic();
       return {
         mnemonic: mnemonic,
         isValid: bip39.validateMnemonic(mnemonic),
@@ -39,7 +39,7 @@ export default {
 //     bip39: bip39,
 //     wallet: {
 //       create: function() {
-//         var mnemonic = bip39.generateMnemonic();  // 클로저
+//         var mnemonic = bip39.generateMnemonic();  // 내부 변수 (은닉됨)
 //         return {
 //           mnemonic: mnemonic,
 //           isValid: bip39.validateMnemonic(mnemonic)

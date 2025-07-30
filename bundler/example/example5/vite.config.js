@@ -8,10 +8,15 @@ export default defineConfig({
       entry: "./main.js",
       name: "MyBundle",
       fileName: (format) => `solana-bundle.${format}.min.js`,
-      formats: ["iife"]
+      formats: ["iife"],
+    },
+    terserOptions: {
+      compress: {
+        drop_console: true,
+      },
     },
     minify: "terser",
     outDir: "dist",
-    emptyOutDir: true
-  }
+    emptyOutDir: true,
+  },
 });
