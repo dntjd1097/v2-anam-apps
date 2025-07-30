@@ -58,6 +58,68 @@
         </div>
       </div>
 
+      <!-- Show Mnemonic Screen -->
+      <div id="mnemonic-check" class="wallet-screen" style="display: none;">
+        <!-- Header -->
+        <header class="header">
+          <div class="header-content">
+            <div class="logo">
+              <img src="../../assets/icons/app_icon.png" alt="Coin Logo" class="coin-logo" />
+              <span class="logo-text">Coin</span>
+            </div>
+            <button class="reset-wallet-btn" onclick="resetWallet()" title="Reset Wallet">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M2.5 10C2.5 14.1421 5.85786 17.5 10 17.5C14.1421 17.5 17.5 14.1421 17.5 10C17.5 5.85786 14.1421 2.5 10 2.5C7.51088 2.5 5.31615 3.76957 4.01111 5.68889L5.55556 5.68889" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </div>
+        </header>
+
+        <!-- Show Mnemonic -->
+        <div class="import-option" id="mnemonic-show-screen">
+          <h4>Mnemonic</h4>
+          <div class="import-option" id="mnemonic-show" onclick="showMnemonic()">
+            click me!
+          </div>
+          <button class="import-btn" onclick="
+            document.getElementById('mnemonic-verify').style.display = 'block'; 
+            document.getElementById('mnemonic-check').style.display = 'none';
+            questMnemonic();
+          ">
+            Next
+          </button>
+        </div>
+      </div>
+      
+      <!-- verify Mnemonic Screen -->
+      <div id="mnemonic-verify" class="wallet-screen" style="display: none;">
+        <!-- Header -->
+        <header class="header">
+          <div class="header-content">
+            <div class="logo">
+              <img src="../../assets/icons/app_icon.png" alt="Coin Logo" class="coin-logo" />
+              <span class="logo-text">Coin</span>
+            </div>
+            <button class="reset-wallet-btn" onclick="resetWallet()" title="Reset Wallet">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M2.5 10C2.5 14.1421 5.85786 17.5 10 17.5C14.1421 17.5 17.5 14.1421 17.5 10C17.5 5.85786 14.1421 2.5 10 2.5C7.51088 2.5 5.31615 3.76957 4.01111 5.68889L5.55556 5.68889" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </div>
+        </header>
+
+        <!-- Check Mnemonic -->
+        <div class="import-option" id="mnemonic-verify-screen">
+          <h4>Mnemonic</h4>
+          <div class="import-option" id="mnemonic-verify-div">
+          </div>
+          <button class="import-btn" onclick="verifyMnemonic()">
+            Next
+          </button>
+        </div>
+      </div>
+
+
       <!-- 메인 지갑 화면 -->
       <div id="wallet-main" class="wallet-screen" style="display: none;">
         <!-- 헤더 -->
