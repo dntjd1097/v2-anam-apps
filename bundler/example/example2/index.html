@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>example2</title>
+  </head>
+  <body>
+    <!-- 우리가 만든 번들 파일 -->
+    <script src="./dist/bundle.iife.js"></script>
+
+    <script>
+      // 이제 example1처럼 사용 가능!
+      const mnemonic = bip39.generateMnemonic();
+      console.log("니모닉:", mnemonic);
+
+      // 다른 함수들도 전부 사용 가능
+      console.log("유효한가?", bip39.validateMnemonic(mnemonic));
+      console.log("단어 개수:", bip39.wordlists.english.length);
+
+      document.body.innerHTML += `<p>생성된 니모닉: ${mnemonic}</p>`;
+    </script>
+  </body>
+</html>

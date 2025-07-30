@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>example</title>
+  </head>
+  <body>
+    <script src="./dist/bundle.iife.min.js"></script>
+
+    <script>
+      // IIFE 형식으로 MyBundle 전역 변수 생성됨
+      console.log("MyBundle:", typeof MyBundle);
+
+      // 지갑 생성
+      const wallet = MyBundle.createWallet();
+      console.log("니모닉:", wallet.mnemonic);
+      console.log("단어 수:", wallet.wordCount);
+
+      // 검증
+      console.log("유효한가?", MyBundle.validate(wallet.mnemonic));
+    </script>
+  </body>
+</html>

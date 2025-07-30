@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>example5 - Solana</title>
+</head>
+<body>
+    <script src="./dist/solana-bundle.iife.min.js"></script>
+    
+    <script>
+        console.log("=== MyBundle (Solana) 테스트 ===");
+        
+        // 1. MyBundle 로드 확인
+        console.log("MyBundle:", typeof MyBundle);
+        console.log("bip39:", typeof MyBundle.bip39);
+        console.log("derivePath:", typeof MyBundle.derivePath);
+        
+        // 2. 니모닉 생성
+        const mnemonic = MyBundle.generateMnemonic();
+        console.log("니모닉:", mnemonic);
+        
+        // 3. 키페어 생성 (Solana 앱처럼)
+        const keypair = MyBundle.keypairFromMnemonic(mnemonic);
+        console.log("주소:", keypair.publicKey.toString());
+        
+        // 4. 연결 테스트
+        const connection = new MyBundle.Connection(
+            "https://api.testnet.solana.com",
+            "confirmed"
+        );
+        console.log("연결:", connection.rpcEndpoint);
+        
+        // 5. 잔액 확인 (비동기)
+        connection.getBalance(keypair.publicKey).then(balance => {
+            console.log("잔액:", balance / MyBundle.LAMPORTS_PER_SOL, "SOL");
+        });
+        
+        // 6. 사용 가능한 주요 클래스들
+        console.log("Keypair:", MyBundle.Keypair);
+        console.log("PublicKey:", MyBundle.PublicKey);
+        console.log("Transaction:", MyBundle.Transaction);
+        console.log("SystemProgram:", MyBundle.SystemProgram);
+        console.log("LAMPORTS_PER_SOL:", MyBundle.LAMPORTS_PER_SOL);
+    </script>
+</body>
+</html>

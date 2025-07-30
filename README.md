@@ -19,18 +19,22 @@ v2-anam-apps/
 │
 ├── apps/                   # 완성된 미니앱들
 │   ├── blockchain/         # 블록체인 미니앱
-│   │   └── solana/        # Solana 지갑 (현재 구현됨)
-│   │       # 다양한 블록체인 모듈 추가 예정
+│   │   ├── bitcoin/       # Bitcoin 지갑
+│   │   ├── ethereum/      # Ethereum 지갑
+│   │   └── solana/        # Solana 지갑
 │   │
 │   └── webapp/            # 일반 웹 미니앱
-│       # 다양한 일반 앱, 디앱 추가 예정
+│       ├── anam/          # Anam 공식 앱
+│       ├── busan/         # 부산 지역 앱
+│       ├── seoul/         # 서울 지역 앱
+│       └── etc/           # 기타 서비스 (DeFi 등)
 │
 ├── bundler/               # 브라우저 번들러
 │   ├── blockchain/        # 블록체인 라이브러리 번들러
-│   │   └── solana-bundler/  # Solana 번들러 (현재 구현됨)
-│   │       # 다양한 번들러 도구 추가 예정
+│   │   ├── bitcoin-bundler/  # Bitcoin 번들러
+│   │   └── solana-bundler/   # Solana 번들러
 │   │
-│   └── apps/             # 웹앱용 번들러 (필요시)
+│   └── README.md         # 번들러 사용 가이드
 │
 ├── scripts/              # 유틸리티 스크립트
 │   └── build-apps.sh     # AnamHub용 ZIP 빌드 스크립트

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>example3</title>
+  </head>
+  <body>
+    <!-- 번들 파일 로드 -->
+    <script src="./dist/bundle.iife.js"></script>
+
+    <script>
+      // vite.config.js의 name: "MyBundle"이
+      // export default를 window.MyBundle로 만듦!
+
+      console.log("=== MyBundle 사용하기 ===");
+
+      // 전체 bip39 접근
+      const mnemonic1 = MyBundle.bip39.generateMnemonic();
+      console.log("방법1:", mnemonic1);
+
+      // 커스텀 wallet 메서드
+      const wallet = MyBundle.wallet.create();
+      console.log("방법2:", wallet);
+
+      // 커스텀 utils 메서드
+      const mnemonic3 = MyBundle.utils.generateMnemonic();
+      console.log("방법3:", mnemonic3);
+
+      // 4. 단어 목록 확인
+      console.log("단어 개수:", MyBundle.utils.getWordList().length);
+    </script>
+  </body>
+</html>

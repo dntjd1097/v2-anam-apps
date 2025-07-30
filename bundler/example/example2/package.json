@@ -1,0 +1,16 @@
+{
+  "name": "simple-bundler-example",
+  "version": "1.0.0",
+  "description": "가장 간단한 번들링 예제",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build"
+  },
+  "devDependencies": {
+    "vite": "^5.0.0",
+    "vite-plugin-node-polyfills": "^0.21.0"
+  },
+  "dependencies": {
+    "bip39": "^3.1.0"
+  }
+}
