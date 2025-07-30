@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Ethereum 어댑터 초기화
   adapter = window.getAdapter();
-  
+
   if (!adapter) {
     console.error("EthereumAdapter not initialized");
     showToast("Failed to initialize Ethereum adapter");
@@ -290,7 +290,8 @@ function navigateToSend() {
   } else if (window.anam && window.anam.navigateTo) {
     window.anam.navigateTo("pages/send/send");
   } else {
-    console.error("navigateTo API not available");
+    // 개발 환경: 일반 HTML 페이지 이동
+    window.location.href = "../send/send.html";
   }
 }
 
@@ -306,7 +307,8 @@ function navigateToReceive() {
   } else if (window.anam && window.anam.navigateTo) {
     window.anam.navigateTo("pages/receive/receive");
   } else {
-    console.error("navigateTo API not available");
+    // 개발 환경: 일반 HTML 페이지 이동
+    window.location.href = "../receive/receive.html";
   }
 }
 

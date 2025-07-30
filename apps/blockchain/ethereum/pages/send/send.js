@@ -67,7 +67,8 @@ function goBack() {
   } else if (window.anam && window.anam.navigateTo) {
     window.anam.navigateTo('pages/index/index');
   } else {
-    console.error("navigateTo API not available");
+    // 개발 환경: 일반 HTML 페이지 이동
+    window.location.href = '../index/index.html';
   }
 }
 
