@@ -568,16 +568,25 @@ const CosmosJS = {
         return config.explorers;
     },
 
-    // 기본 RPC URL 가져오기 (첫 번째 RPC 엔드포인트)
+    // 기본 RPC URL 가져오기 (랜덤으로 선택)
     getDefaultRpcUrl: () => {
         const config = CosmosJS.getConfig();
-        return config.apis.rpc[0].address;
+        const rpcEndpoints = config.apis.rpc;
+        // 랜덤으로 RPC 엔드포인트 선택
+        const randomIndex = Math.floor(
+            Math.random() * rpcEndpoints.length
+        );
+        return rpcEndpoints[randomIndex].address;
     },
 
     // 기본 REST URL 가져오기 (첫 번째 REST 엔드포인트)
     getDefaultRestUrl: () => {
         const config = CosmosJS.getConfig();
-        return config.apis.rest[0].address;
+        const apiEndpoints = config.apis.rest;
+        const randomIndex = Math.floor(
+            Math.random() * apiEndpoints.length
+        );
+        return apiEndpoints[randomIndex].address;
     },
 
     // 기본 RPC URL들 (하위 호환성을 위해 유지)
