@@ -23,115 +23,121 @@ function initializePage() {
         return;
     }
 
-    // 라디오 버튼 이벤트
-    setupRadioGroups();
-
-    // 버튼 이벤트
-    setupButtons();
-
     // 모달 이벤트
     setupModal();
-}
 
-function setupRadioGroups() {
-    // 생성 타입 선택
-    const createTypeGroup = document.getElementById(
-        'createTypeGroup'
-    );
-    createTypeGroup.addEventListener('change', (e) => {
-        const selectedOption =
-            e.target.closest('.radio-option');
-        if (selectedOption) {
-            // 모든 옵션에서 선택 상태 제거
-            createTypeGroup
-                .querySelectorAll('.radio-option')
-                .forEach((option) => {
-                    option.classList.remove('selected');
-                });
-            // 선택된 옵션에 선택 상태 추가
-            selectedOption.classList.add('selected');
-        }
-    });
-
-    // 불러오기 타입 선택
-    const importTypeGroup = document.getElementById(
-        'importTypeGroup'
-    );
-    importTypeGroup.addEventListener('change', (e) => {
-        const selectedOption =
-            e.target.closest('.radio-option');
-        if (selectedOption) {
-            // 모든 옵션에서 선택 상태 제거
-            importTypeGroup
-                .querySelectorAll('.radio-option')
-                .forEach((option) => {
-                    option.classList.remove('selected');
-                });
-            // 선택된 옵션에 선택 상태 추가
-            selectedOption.classList.add('selected');
-        }
-    });
-}
-
-function setupButtons() {
-    const createWalletBtn = document.getElementById(
-        'createWalletBtn'
-    );
-    const importWalletBtn = document.getElementById(
-        'importWalletBtn'
-    );
-
-    // 지갑 생성 버튼
-    createWalletBtn.addEventListener('click', () => {
-        const selectedType = document.querySelector(
-            'input[name="createType"]:checked'
-        );
-        if (!selectedType) {
-            window.CryptoWalletApp.utils.showToast(
-                '지갑 생성 방식을 선택해주세요.'
-            );
-            return;
-        }
-
-        showCreateWalletModal(selectedType.value);
-    });
-
-    // 지갑 불러오기 버튼
-    importWalletBtn.addEventListener('click', () => {
-        const selectedType = document.querySelector(
-            'input[name="importType"]:checked'
-        );
-        if (!selectedType) {
-            window.CryptoWalletApp.utils.showToast(
-                '지갑 불러오기 방식을 선택해주세요.'
-            );
-            return;
-        }
-
-        showImportWalletModal(selectedType.value);
-    });
+    // 페이지 로드 완료 표시
+    document.body.classList.add('loaded');
 }
 
 function setupModal() {
     const modal = document.getElementById('modal');
     const closeBtn = document.getElementById('closeModal');
     const cancelBtn = document.getElementById('cancelBtn');
+    const confirmBtn =
+        document.getElementById('confirmBtn');
+
+    if (!modal) return;
 
     // 모달 닫기
-    closeBtn.addEventListener('click', () => {
-        modal.style.display = 'none';
-    });
+    if (closeBtn) {
+        closeBtn.addEventListener('click', () => {
+            closeModal();
+        });
+    }
 
-    cancelBtn.addEventListener('click', () => {
-        modal.style.display = 'none';
-    });
+    if (cancelBtn) {
+        cancelBtn.addEventListener('click', () => {
+            closeModal();
+        });
+    }
 
     // 모달 외부 클릭 시 닫기
     modal.addEventListener('click', (e) => {
         if (e.target === modal) {
-            modal.style.display = 'none';
+            closeModal();
         }
     });
+
+    // ESC 키로 모달 닫기
+    document.addEventListener('keydown', (e) => {
+        if (
+            e.key === 'Escape' &&
+            modal.style.display === 'block'
+        ) {
+            closeModal();
+        }
+    });
+}
+
+function closeModal() {
+    const modal = document.getElementById('modal');
+    const confirmBtn =
+        document.getElementById('confirmBtn');
+
+    if (modal) {
+        modal.style.display = 'none';
+    }
+
+    if (confirmBtn) {
+        confirmBtn.onclick = null;
+        confirmBtn.style.display = 'block';
+    }
+}
+
+// HTML에서 호출되는 함수들
+function showMnemonicOptions() {
+    const modal = document.getElementById('modal');
+    const modalTitle =
+        document.getElementById('modalTitle');
+    const modalContent =
+        document.getElementById('modalContent');
+    const confirmBtn =
+        document.getElementById('confirmBtn');
+
+    modalTitle.textContent = '니모닉 생성 방식 선택';
+
+    modalContent.innerHTML = `
+        <div class="mnemonic-options">
+            <div class="mnemonic-option" onclick="selectMnemonicOption('mnemonic-12')">
+                <div class="option-header">
+                    <div class="option-title">12단어 니모닉</div>
+                    <div class="option-badge">보안</div>
+                </div>
+                <div class="option-desc">128비트 보안, 12개의 단어로 구성된 표준 니모닉</div>
+            </div>
+            
+            <div class="mnemonic-option" onclick="selectMnemonicOption('mnemonic-24')">
+                <div class="option-header">
+                    <div class="option-title">24단어 니모닉</div>
+                    <div class="option-badge">고보안</div>
+                </div>
+                <div class="option-desc">256비트 보안, 24개의 단어로 구성된 고보안 니모닉</div>
+            </div>
+        </div>
+    `;
+
+    confirmBtn.style.display = 'none';
+    modal.style.display = 'block';
+}
+
+function selectMnemonicOption(type) {
+    // 선택 상태 업데이트
+    document
+        .querySelectorAll('.mnemonic-option')
+        .forEach((option) => {
+            option.classList.remove('selected');
+        });
+    event.target
+        .closest('.mnemonic-option')
+        .classList.add('selected');
+
+    // 지갑 생성 모달 표시
+    showCreateWalletModal(type);
+}
+
+function showPrivateKeyModal() {
+    showCreateWalletModal('private');
 }
 
 function showCreateWalletModal(type) {
@@ -144,6 +150,17 @@ function showCreateWalletModal(type) {
         document.getElementById('confirmBtn');
 
     modalTitle.textContent = '지갑 생성';
+
+    // 로딩 상태 표시
+    modalContent.innerHTML = `
+        <div class="loading-container">
+            <div class="loading-spinner"></div>
+            <p>지갑을 생성하고 있습니다...</p>
+        </div>
+    `;
+
+    modal.style.display = 'block';
+    confirmBtn.style.display = 'none';
 
     if (type === 'mnemonic-12' || type === 'mnemonic-24') {
         // 니모닉 생성
@@ -174,16 +191,20 @@ function showCreateWalletModal(type) {
                             )
                             .join('')}
                     </div>
-                    <button class="copy-btn" onclick="copyMnemonic('${mnemonic}')">전체 복사</button>
+                    <button class="copy-btn" onclick="copyMnemonic('${mnemonic}')">
+                        <span class="copy-icon">📋</span>
+                        전체 복사
+                    </button>
                 </div>
             `;
 
             confirmBtn.textContent = '지갑 생성';
+            confirmBtn.style.display = 'block';
             confirmBtn.onclick = () =>
                 createWalletFromMnemonic(mnemonic);
         } catch (error) {
             modalContent.innerHTML = `
-                <div class="warning-message">
+                <div class="error-message">
                     <strong>오류 발생</strong>
                     지갑 생성 중 오류가 발생했습니다: ${error.message}
                 </div>
@@ -207,18 +228,22 @@ function showCreateWalletModal(type) {
                         </div>
                         <div class="mnemonic-display">
                             <strong>Private Key:</strong>
-                            <div>${keyInfo.privateKey}</div>
-                            <button class="copy-btn" onclick="copyPrivateKey('${keyInfo.privateKey}')">복사</button>
+                            <div class="private-key-display">${keyInfo.privateKey}</div>
+                            <button class="copy-btn" onclick="copyPrivateKey('${keyInfo.privateKey}')">
+                                <span class="copy-icon">📋</span>
+                                복사
+                            </button>
                         </div>
                     `;
 
                     confirmBtn.textContent = '지갑 생성';
+                    confirmBtn.style.display = 'block';
                     confirmBtn.onclick = () =>
                         createWalletFromPrivateKey(keyInfo);
                 })
                 .catch((error) => {
                     modalContent.innerHTML = `
-                        <div class="warning-message">
+                        <div class="error-message">
                             <strong>오류 발생</strong>
                             Private Key 생성 중 오류가 발생했습니다: ${error.message}
                         </div>
@@ -227,7 +252,7 @@ function showCreateWalletModal(type) {
                 });
         } catch (error) {
             modalContent.innerHTML = `
-                <div class="warning-message">
+                <div class="error-message">
                     <strong>오류 발생</strong>
                     Private Key 생성 중 오류가 발생했습니다: ${error.message}
                 </div>
@@ -235,8 +260,6 @@ function showCreateWalletModal(type) {
             confirmBtn.style.display = 'none';
         }
     }
-
-    modal.style.display = 'block';
 }
 
 function showImportWalletModal(type) {
@@ -260,10 +283,12 @@ function showImportWalletModal(type) {
                     placeholder="단어들을 공백으로 구분하여 입력하세요..."
                     rows="4"
                 ></textarea>
+                <div class="input-hint">12단어 또는 24단어를 공백으로 구분하여 입력하세요</div>
             </div>
         `;
 
         confirmBtn.textContent = '지갑 불러오기';
+        confirmBtn.style.display = 'block';
         confirmBtn.onclick = () =>
             importWalletFromMnemonic();
     } else if (type === 'private') {
@@ -276,10 +301,12 @@ function showImportWalletModal(type) {
                     placeholder="Private Key를 입력하세요..."
                     rows="3"
                 ></textarea>
+                <div class="input-hint">개인키를 정확히 입력하세요</div>
             </div>
         `;
 
         confirmBtn.textContent = '지갑 불러오기';
+        confirmBtn.style.display = 'block';
         confirmBtn.onclick = () =>
             importWalletFromPrivateKey();
     }
@@ -288,7 +315,14 @@ function showImportWalletModal(type) {
 }
 
 async function createWalletFromMnemonic(mnemonic) {
+    const confirmBtn =
+        document.getElementById('confirmBtn');
+
     try {
+        // 버튼 비활성화 및 로딩 상태
+        confirmBtn.disabled = true;
+        confirmBtn.textContent = '생성 중...';
+
         const keyInfo =
             await window.CryptoWalletApp.cosmos.getPrivateKeyFromMnemonic(
                 mnemonic
@@ -316,11 +350,20 @@ async function createWalletFromMnemonic(mnemonic) {
         window.CryptoWalletApp.utils.showToast(
             '지갑 생성에 실패했습니다: ' + error.message
         );
+        confirmBtn.disabled = false;
+        confirmBtn.textContent = '지갑 생성';
     }
 }
 
 async function createWalletFromPrivateKey(keyInfo) {
+    const confirmBtn =
+        document.getElementById('confirmBtn');
+
     try {
+        // 버튼 비활성화 및 로딩 상태
+        confirmBtn.disabled = true;
+        confirmBtn.textContent = '생성 중...';
+
         const walletData = {
             walletType: 'private',
             privateKey: keyInfo.privateKey,
@@ -342,12 +385,16 @@ async function createWalletFromPrivateKey(keyInfo) {
         window.CryptoWalletApp.utils.showToast(
             '지갑 생성에 실패했습니다: ' + error.message
         );
+        confirmBtn.disabled = false;
+        confirmBtn.textContent = '지갑 생성';
     }
 }
 
 async function importWalletFromMnemonic() {
     const mnemonicInput =
         document.getElementById('mnemonicInput');
+    const confirmBtn =
+        document.getElementById('confirmBtn');
     const mnemonic = mnemonicInput.value.trim();
 
     if (!mnemonic) {
@@ -358,6 +405,10 @@ async function importWalletFromMnemonic() {
     }
 
     try {
+        // 버튼 비활성화 및 로딩 상태
+        confirmBtn.disabled = true;
+        confirmBtn.textContent = '불러오는 중...';
+
         // 니모닉 검증
         if (
             !window.CryptoWalletApp.cosmos.validateMnemonic(
@@ -367,6 +418,8 @@ async function importWalletFromMnemonic() {
             window.CryptoWalletApp.utils.showToast(
                 '유효하지 않은 니모닉입니다.'
             );
+            confirmBtn.disabled = false;
+            confirmBtn.textContent = '지갑 불러오기';
             return;
         }
 
@@ -397,6 +450,8 @@ async function importWalletFromMnemonic() {
         window.CryptoWalletApp.utils.showToast(
             '지갑 불러오기에 실패했습니다: ' + error.message
         );
+        confirmBtn.disabled = false;
+        confirmBtn.textContent = '지갑 불러오기';
     }
 }
 
@@ -404,6 +459,8 @@ async function importWalletFromPrivateKey() {
     const privateKeyInput = document.getElementById(
         'privateKeyInput'
     );
+    const confirmBtn =
+        document.getElementById('confirmBtn');
     const privateKey = privateKeyInput.value.trim();
 
     if (!privateKey) {
@@ -414,6 +471,10 @@ async function importWalletFromPrivateKey() {
     }
 
     try {
+        // 버튼 비활성화 및 로딩 상태
+        confirmBtn.disabled = true;
+        confirmBtn.textContent = '불러오는 중...';
+
         const wallet =
             await window.CryptoWalletApp.cosmos.createWalletFromPrivateKey(
                 privateKey
@@ -444,16 +505,24 @@ async function importWalletFromPrivateKey() {
         window.CryptoWalletApp.utils.showToast(
             '지갑 불러오기에 실패했습니다: ' + error.message
         );
+        confirmBtn.disabled = false;
+        confirmBtn.textContent = '지갑 불러오기';
     }
 }
 
 // 전역 함수들
 function copyMnemonic(mnemonic) {
     window.CryptoWalletApp.utils.copyToClipboard(mnemonic);
+    window.CryptoWalletApp.utils.showToast(
+        '니모닉이 복사되었습니다!'
+    );
 }
 
 function copyPrivateKey(privateKey) {
     window.CryptoWalletApp.utils.copyToClipboard(
         privateKey
+    );
+    window.CryptoWalletApp.utils.showToast(
+        'Private Key가 복사되었습니다!'
     );
 }

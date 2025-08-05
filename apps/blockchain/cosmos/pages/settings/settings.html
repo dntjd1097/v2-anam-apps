@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+        />
+        <title>설정 - Cosmos Wallet</title>
+        <link rel="stylesheet" href="../../app.css" />
+        <link rel="stylesheet" href="settings.css" />
+        <style>
+            /* 추가 UX 개선용 인라인 스타일 */
+            .section-title {
+                font-size: 17px;
+                font-weight: 700;
+                margin-bottom: 12px;
+                color: #4a4a4a;
+                letter-spacing: -0.5px;
+            }
+            .wallet-card {
+                background: linear-gradient(
+                    135deg,
+                    #f8fafc 60%,
+                    #e9ecef 100%
+                );
+                border-radius: 16px;
+                padding: 20px 18px 14px 18px;
+                margin-bottom: 18px;
+                box-shadow: 0 2px 8px
+                    rgba(102, 126, 234, 0.06);
+            }
+            /* 기존 .wallet-info-row를 세로(column)로 변경 */
+            .wallet-info-row {
+                display: flex;
+                flex-direction: column; /* 세로로 쌓기 */
+                align-items: flex-start;
+                margin-bottom: 16px;
+                padding-bottom: 8px;
+                border-bottom: 1px solid #f1f3f4;
+                width: 100%;
+            }
+
+            .wallet-info-row:last-child {
+                border-bottom: none;
+            }
+
+            .wallet-info-row .label {
+                font-size: 13px;
+                color: #888;
+                font-weight: 500;
+                margin-bottom: 2px;
+                width: auto;
+            }
+
+            .wallet-info-row .value {
+                font-family: monospace;
+                font-size: 15px;
+                color: #333;
+                font-weight: 600;
+                margin-bottom: 0;
+                width: 100%;
+                word-break: break-all;
+            }
+
+            .wallet-info-row .copy-btn {
+                margin-top: 6px;
+                margin-left: 0;
+                padding: 4px 10px;
+                font-size: 12px;
+            }
+            .settings-menu {
+                background: white;
+                border-radius: 14px;
+                overflow: hidden;
+                margin-bottom: 18px;
+                box-shadow: 0 2px 8px
+                    rgba(102, 126, 234, 0.04);
+            }
+            .settings-item {
+                display: flex;
+                align-items: center;
+                padding: 18px 20px;
+                border-bottom: 1px solid #f1f3f4;
+                cursor: pointer;
+                transition: background 0.2s;
+            }
+            .settings-item:last-child {
+                border-bottom: none;
+            }
+            .settings-item .icon {
+                margin-right: 14px;
+                font-size: 22px;
+                width: 28px;
+                text-align: center;
+            }
+            .settings-item .label {
+                flex: 1;
+                font-weight: 500;
+                font-size: 15px;
+                color: #333;
+            }
+            .settings-item .arrow {
+                color: #b0b0b0;
+            }
+            .settings-item:hover {
+                background: #f5f7fb;
+            }
+            .settings-item.danger {
+                color: #ff4d4f;
+                background: #fff1f0;
+            }
+            .settings-item.danger .icon {
+                color: #ff4d4f;
+            }
+            .settings-item.danger:hover {
+                background: #ffeaea;
+            }
+            @media (max-width: 480px) {
+                .wallet-card,
+                .settings-menu {
+                    padding: 10px 4px;
+                }
+                .settings-item {
+                    padding: 14px 8px;
+                }
+                .wallet-info-row .label {
+                    width: 60px;
+                    font-size: 13px;
+                }
+                .wallet-info-row .value {
+                    font-size: 13px;
+                }
+            }
+            /* 모달 개선 */
+            .modal-content {
+                border-radius: 16px;
+            }
+            .modal-header {
+                border-radius: 16px 16px 0 0;
+                background: #f8f9fa;
+            }
+            .modal-footer .btn {
+                background: #667eea;
+                color: #fff;
+                font-weight: 600;
+            }
+            .modal-footer .btn:hover {
+                background: #5a6fd8;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <button
+                    class="back-btn"
+                    onclick="window.CryptoWalletApp.navigateTo('main')"
+                >
+                    ←
+                </button>
+                <h1>설정</h1>
+            </div>
+
+            <div class="main-content">
+                <!-- 지갑/체인 정보 카드 -->
+                <div class="wallet-card">
+                    <div class="section-title">
+                        지갑 정보
+                    </div>
+                    <div class="wallet-info-row">
+                        <span class="label">주소</span>
+                        <span
+                            class="value"
+                            id="walletAddress"
+                        ></span>
+                        <button
+                            class="copy-btn"
+                            onclick="copyAddress()"
+                        >
+                            복사
+                        </button>
+                    </div>
+                    <div class="wallet-info-row">
+                        <span class="label">타입</span>
+                        <span
+                            class="value"
+                            id="walletType"
+                        ></span>
+                    </div>
+                    <div class="wallet-info-row">
+                        <span class="label">체인</span>
+                        <span
+                            class="value"
+                            id="chainName"
+                        ></span>
+                    </div>
+                    <div class="wallet-info-row">
+                        <span class="label">심볼</span>
+                        <span
+                            class="value"
+                            id="tokenSymbol"
+                        ></span>
+                    </div>
+                    <div class="wallet-info-row">
+                        <span class="label">소수점</span>
+                        <span
+                            class="value"
+                            id="decimals"
+                        ></span>
+                    </div>
+                </div>
+
+                <!-- 설정 메뉴 -->
+                <div class="settings-section">
+                    <div class="section-title">
+                        지갑 관리
+                    </div>
+                    <div class="settings-menu">
+                        <div
+                            class="settings-item"
+                            onclick="showMnemonic()"
+                        >
+                            <span class="icon">🔑</span>
+                            <span class="label"
+                                >복구구문 보기</span
+                            >
+                            <span class="arrow">›</span>
+                        </div>
+                        <div
+                            class="settings-item"
+                            onclick="showPrivateKey()"
+                        >
+                            <span class="icon">🗝️</span>
+                            <span class="label"
+                                >개인키 내보내기</span
+                            >
+                            <span class="arrow">›</span>
+                        </div>
+                        <div
+                            class="settings-item"
+                            onclick="exportWallet()"
+                        >
+                            <span class="icon">📦</span>
+                            <span class="label"
+                                >지갑 내보내기(JSON)</span
+                            >
+                            <span class="arrow">›</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <div
+                        class="section-title"
+                        style="color: #ff4d4f"
+                    >
+                        위험한 작업
+                    </div>
+                    <div class="settings-menu">
+                        <div
+                            class="settings-item danger"
+                            onclick="deleteWallet()"
+                        >
+                            <span class="icon">🗑️</span>
+                            <span class="label"
+                                >지갑 삭제</span
+                            >
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 모달 -->
+        <div id="modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="modalTitle">정보 보기</h3>
+                    <button
+                        class="close-btn"
+                        id="closeModal"
+                    >
+                        &times;
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="modalContent"></div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn" id="closeModalBtn">
+                        닫기
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- CosmosJS 번들 로드 (이 줄이 반드시 필요!) -->
+        <script src="../../assets/libs/cosmos-bundle.iife.js"></script>
+        <!-- 앱 스크립트들 -->
+        <script src="../../app.js"></script>
+        <script src="settings.js"></script>
+    </body>
+</html>

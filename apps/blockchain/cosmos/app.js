@@ -247,14 +247,25 @@ window.CryptoWalletApp = {
 
         // 날짜 포맷팅
         formatDate(timestamp) {
+            if (!timestamp) return '';
+            // ISO 문자열 또는 숫자 모두 지원
             const date = new Date(timestamp);
-            return date.toLocaleDateString('ko-KR', {
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit',
-                hour: '2-digit',
-                minute: '2-digit',
-            });
+            if (isNaN(date.getTime())) return '';
+            // YYYY-MM-DD HH:mm 형식
+            return (
+                date.getFullYear() +
+                '-' +
+                String(date.getMonth() + 1).padStart(
+                    2,
+                    '0'
+                ) +
+                '-' +
+                String(date.getDate()).padStart(2, '0') +
+                ' ' +
+                String(date.getHours()).padStart(2, '0') +
+                ':' +
+                String(date.getMinutes()).padStart(2, '0')
+            );
         },
 
         // 금액 포맷팅 (체인 설정 기반)

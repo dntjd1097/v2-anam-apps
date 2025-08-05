@@ -69,11 +69,12 @@ function displayWalletInfo() {
         document.getElementById('walletAddress');
 
     if (app.wallet && app.wallet.address) {
-        addressElement.textContent =
-            app.utils.shortenAddress(
-                app.wallet.address,
-                12
-            );
+        // addressElement.textContent =
+        //     app.utils.shortenAddress(
+        //         app.wallet.address,
+        //         12
+        //     );
+        addressElement.textContent = app.wallet.address;
     } else {
         addressElement.textContent =
             '주소를 불러올 수 없습니다';

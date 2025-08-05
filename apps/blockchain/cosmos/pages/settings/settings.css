@@ -1,0 +1,236 @@
+/* Settings 페이지 스타일 */
+
+.wallet-info-section {
+    margin-bottom: 32px;
+}
+
+.wallet-card {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.wallet-address,
+.wallet-type,
+.wallet-created {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.wallet-address .label,
+.wallet-type .label,
+.wallet-created .label {
+    font-weight: 500;
+    color: #333;
+    width: 70px;
+}
+
+.wallet-address .address,
+.wallet-type .type,
+.wallet-created .date {
+    font-family: monospace;
+    font-size: 13px;
+    color: #555;
+    margin-right: 8px;
+}
+
+.wallet-address .copy-btn {
+    margin-left: 8px;
+    padding: 4px 10px;
+    font-size: 12px;
+}
+
+.settings-section {
+    margin-bottom: 32px;
+}
+
+.settings-section h3 {
+    font-size: 16px;
+    margin-bottom: 12px;
+    color: #555;
+}
+
+.settings-menu {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.settings-item {
+    display: flex;
+    align-items: center;
+    padding: 16px 20px;
+    border-bottom: 1px solid #f1f3f4;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.settings-item:last-child {
+    border-bottom: none;
+}
+
+.settings-item .icon {
+    margin-right: 12px;
+    font-size: 18px;
+    width: 24px;
+    text-align: center;
+}
+
+.settings-item .label {
+    flex: 1;
+    font-weight: 500;
+}
+
+.settings-item .arrow {
+    color: #6c757d;
+}
+
+.settings-item .value {
+    color: #495057;
+    font-size: 13px;
+    margin-left: 8px;
+}
+
+.settings-item.danger {
+    color: #ff4d4f;
+}
+
+.settings-item.danger .icon {
+    color: #ff4d4f;
+}
+
+.settings-item.danger:hover {
+    background: #fff1f0;
+}
+
+@media (max-width: 480px) {
+    .wallet-card,
+    .settings-menu {
+        padding: 12px 8px;
+    }
+    .settings-item {
+        padding: 12px 8px;
+    }
+}
+
+/* 모달 스타일 (index.css와 동일하게) */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    overflow-y: auto;
+}
+
+.modal-content {
+    background-color: white;
+    margin: 10% auto;
+    padding: 0;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 1px solid #e9ecef;
+    flex-shrink: 0;
+}
+
+.modal-header h3 {
+    margin: 0;
+    font-size: 18px;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #6c757d;
+}
+
+.modal-body {
+    padding: 20px;
+    overflow-y: auto;
+    flex: 1;
+    max-height: calc(80vh - 120px);
+}
+
+/* 개인키/니모닉 표시 스타일 추가 */
+.mnemonic-display {
+    font-family: monospace;
+    font-size: 14px;
+    background: #f8f9fa;
+    padding: 16px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    word-break: break-all;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    line-height: 1.5;
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #e9ecef;
+}
+
+/* 텍스트 영역 스타일 */
+.textarea-field {
+    width: 100%;
+    font-family: monospace;
+    font-size: 12px;
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 12px;
+    resize: vertical;
+    word-break: break-all;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    line-height: 1.4;
+}
+
+.modal-footer {
+    display: flex;
+    gap: 12px;
+    padding: 20px;
+    border-top: 1px solid #e9ecef;
+    flex-shrink: 0;
+}
+
+.modal-footer .btn {
+    flex: 1;
+    margin: 0;
+}
+
+/* 복사 버튼 스타일 */
+.copy-btn {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.copy-btn:hover {
+    background: #0056b3;
+}

@@ -26,119 +26,125 @@
                 <div class="section">
                     <h3>지갑 생성하기</h3>
 
-                    <div
-                        class="radio-group"
-                        id="createTypeGroup"
-                    >
-                        <div
-                            class="radio-option"
-                            data-type="mnemonic-12"
+                    <div class="create-options">
+                        <button
+                            class="create-option-btn"
+                            id="mnemonicBtn"
+                            onclick="showMnemonicOptions()"
+                            aria-label="니모닉으로 지갑 생성"
                         >
-                            <input
-                                type="radio"
-                                name="createType"
-                                value="mnemonic-12"
-                                id="mnemonic-12"
-                            />
-                            <label for="mnemonic-12"
-                                >12단어 니모닉</label
-                            >
-                        </div>
-                        <div
-                            class="radio-option"
-                            data-type="mnemonic-24"
-                        >
-                            <input
-                                type="radio"
-                                name="createType"
-                                value="mnemonic-24"
-                                id="mnemonic-24"
-                            />
-                            <label for="mnemonic-24"
-                                >24단어 니모닉</label
-                            >
-                        </div>
-                        <div
-                            class="radio-option"
-                            data-type="private"
-                        >
-                            <input
-                                type="radio"
-                                name="createType"
-                                value="private"
-                                id="private"
-                            />
-                            <label for="private"
-                                >Private Key</label
-                            >
-                        </div>
-                    </div>
+                            <div class="option-icon">
+                                🔑
+                            </div>
+                            <div class="option-text">
+                                <div class="option-title">
+                                    니모닉 생성
+                                </div>
+                                <div class="option-desc">
+                                    12단어 또는 24단어
+                                    니모닉으로 지갑 생성
+                                </div>
+                            </div>
+                            <div class="option-arrow">
+                                ›
+                            </div>
+                        </button>
 
-                    <button
-                        class="btn"
-                        id="createWalletBtn"
-                    >
-                        지갑 생성하기
-                    </button>
+                        <button
+                            class="create-option-btn"
+                            id="privateKeyBtn"
+                            onclick="showPrivateKeyModal()"
+                            aria-label="Private Key로 지갑 생성"
+                        >
+                            <div class="option-icon">
+                                🗝️
+                            </div>
+                            <div class="option-text">
+                                <div class="option-title">
+                                    Private Key 생성
+                                </div>
+                                <div class="option-desc">
+                                    개인키로 지갑 생성
+                                </div>
+                            </div>
+                            <div class="option-arrow">
+                                ›
+                            </div>
+                        </button>
+                    </div>
                 </div>
 
                 <!-- 지갑 불러오기 섹션 -->
                 <div class="section">
                     <h3>지갑 불러오기</h3>
 
-                    <div
-                        class="radio-group"
-                        id="importTypeGroup"
-                    >
-                        <div
-                            class="radio-option"
-                            data-type="mnemonic"
+                    <div class="import-options">
+                        <button
+                            class="import-option-btn"
+                            id="importMnemonicBtn"
+                            onclick="showImportWalletModal('mnemonic')"
+                            aria-label="니모닉으로 지갑 불러오기"
                         >
-                            <input
-                                type="radio"
-                                name="importType"
-                                value="mnemonic"
-                                id="import-mnemonic"
-                            />
-                            <label for="import-mnemonic"
-                                >니모닉으로 불러오기</label
-                            >
-                        </div>
-                        <div
-                            class="radio-option"
-                            data-type="private"
-                        >
-                            <input
-                                type="radio"
-                                name="importType"
-                                value="private"
-                                id="import-private"
-                            />
-                            <label for="import-private"
-                                >Private Key로
-                                불러오기</label
-                            >
-                        </div>
-                    </div>
+                            <div class="option-icon">
+                                📝
+                            </div>
+                            <div class="option-text">
+                                <div class="option-title">
+                                    니모닉으로 불러오기
+                                </div>
+                                <div class="option-desc">
+                                    12단어 또는 24단어
+                                    니모닉을 입력하여 기존
+                                    지갑을 불러옵니다
+                                </div>
+                            </div>
+                            <div class="option-arrow">
+                                ›
+                            </div>
+                        </button>
 
-                    <button
-                        class="btn btn-secondary"
-                        id="importWalletBtn"
-                    >
-                        지갑 불러오기
-                    </button>
+                        <button
+                            class="import-option-btn"
+                            id="importPrivateKeyBtn"
+                            onclick="showImportWalletModal('private')"
+                            aria-label="Private Key로 지갑 불러오기"
+                        >
+                            <div class="option-icon">
+                                🔐
+                            </div>
+                            <div class="option-text">
+                                <div class="option-title">
+                                    Private Key로 불러오기
+                                </div>
+                                <div class="option-desc">
+                                    개인키를 입력하여 기존
+                                    지갑을 불러옵니다
+                                </div>
+                            </div>
+                            <div class="option-arrow">
+                                ›
+                            </div>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
 
         <!-- 모달 -->
-        <div id="modal" class="modal">
+        <div
+            id="modal"
+            class="modal"
+            role="dialog"
+            aria-labelledby="modalTitle"
+            aria-hidden="true"
+        >
             <div class="modal-content">
                 <div class="modal-header">
                     <h3 id="modalTitle">지갑 생성</h3>
                     <button
                         class="close-btn"
                         id="closeModal"
+                        aria-label="모달 닫기"
                     >
                         &times;
                     </button>
@@ -147,16 +153,33 @@
                     <div id="modalContent"></div>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn" id="confirmBtn">
+                    <button
+                        class="btn btn-primary"
+                        id="confirmBtn"
+                    >
                         확인
                     </button>
                     <button
                         class="btn btn-secondary"
                         id="cancelBtn"
+                        aria-label="취소"
                     >
                         취소
                     </button>
                 </div>
+            </div>
+        </div>
+
+        <!-- 스크린 리더 전용 텍스트 -->
+        <div class="sr-only">
+            <div id="loading-announcement">
+                로딩 중입니다
+            </div>
+            <div id="success-announcement">
+                성공적으로 완료되었습니다
+            </div>
+            <div id="error-announcement">
+                오류가 발생했습니다
             </div>
         </div>
 
