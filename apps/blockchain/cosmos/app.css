@@ -23,19 +23,41 @@
 body {
     font-family: -apple-system, BlinkMacSystemFont,
         'Segoe UI', Roboto, sans-serif;
-    background: linear-gradient(
-        135deg,
-        #667eea 0%,
-        #764ba2 100%
-    );
+    background: white;
     min-height: 100vh;
     color: #333;
 }
 
+/* 큰 화면에서 적당한 너비로 제한 */
+@media (min-width: 768px) {
+    body {
+        max-width: 600px;
+        margin: 0 auto;
+        font-family: -apple-system, BlinkMacSystemFont,
+            'Segoe UI', Roboto, sans-serif;
+        background: white;
+        min-height: 100vh;
+        color: #333;
+        box-shadow: none;
+    }
+}
+
+@media (min-width: 1025px) {
+    body {
+        max-width: 800px;
+        margin: 0 auto;
+        font-family: -apple-system, BlinkMacSystemFont,
+            'Segoe UI', Roboto, sans-serif;
+        background: white;
+        min-height: 100vh;
+        color: #333;
+        box-shadow: none;
+    }
+}
 /* 컨테이너 */
 .container {
-    max-width: 400px;
-    margin: 0 auto;
+    max-width: 100%;
+    margin: 0;
     background: white;
     min-height: 100vh;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
@@ -52,6 +74,27 @@ body {
     padding: 20px;
     text-align: center;
     position: relative;
+}
+
+/* 큰 화면에서 헤더 패딩 조정 */
+@media (min-width: 768px) {
+    .header {
+        padding: 30px 40px;
+    }
+
+    .header h1 {
+        font-size: 28px;
+    }
+}
+
+@media (min-width: 1025px) {
+    .header {
+        padding: 40px 60px;
+    }
+
+    .header h1 {
+        font-size: 32px;
+    }
 }
 
 .header h1 {
@@ -90,6 +133,19 @@ body {
 .main-content {
     padding: 20px;
     flex: 1;
+}
+
+/* 큰 화면에서 메인 콘텐츠 패딩 조정 */
+@media (min-width: 768px) {
+    .main-content {
+        padding: 40px;
+    }
+}
+
+@media (min-width: 1025px) {
+    .main-content {
+        padding: 60px;
+    }
 }
 
 /* 카드 스타일 */

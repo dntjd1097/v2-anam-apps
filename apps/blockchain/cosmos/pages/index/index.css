@@ -72,6 +72,21 @@ body.loaded {
     animation: modalSlideIn 0.3s ease-out;
 }
 
+/* 큰 화면에서 모달 크기 조정 */
+@media (min-width: 768px) {
+    .modal-content {
+        max-width: 500px;
+        width: 80%;
+    }
+}
+
+@media (min-width: 1025px) {
+    .modal-content {
+        max-width: 600px;
+        width: 70%;
+    }
+}
+
 @keyframes modalSlideIn {
     from {
         opacity: 0;
