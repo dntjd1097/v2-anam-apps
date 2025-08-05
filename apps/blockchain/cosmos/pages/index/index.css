@@ -1,0 +1,270 @@
+/* 시작 페이지 스타일 */
+.main-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 100px);
+    padding: 40px 0;
+}
+
+/* 로고 섹션 */
+.logo-section {
+    text-align: center;
+    margin-bottom: 48px;
+}
+
+.logo {
+    margin-bottom: 24px;
+}
+
+.logo-img {
+    width: 80px;
+    height: 80px;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(108, 92, 231, 0.2);
+}
+
+.app-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: #2e2e2e;
+    margin-bottom: 8px;
+}
+
+.app-subtitle {
+    font-size: 16px;
+    color: #6c757d;
+    margin-bottom: 0;
+}
+
+/* 지갑 액션 버튼 */
+.wallet-actions {
+    width: 100%;
+    max-width: 320px;
+    margin-bottom: 48px;
+}
+
+.wallet-actions .btn {
+    margin-bottom: 16px;
+}
+
+.btn-icon {
+    margin-right: 8px;
+    font-size: 18px;
+}
+
+/* 보안 안내 */
+.security-notice {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    max-width: 320px;
+    border: 1px solid #e9ecef;
+}
+
+.notice-icon {
+    font-size: 24px;
+    margin-bottom: 12px;
+}
+
+.security-notice p {
+    font-size: 14px;
+    color: #6c757d;
+    margin-bottom: 8px;
+    line-height: 1.5;
+}
+
+.security-notice p:last-child {
+    margin-bottom: 0;
+}
+
+/* 모달 스타일 */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+}
+
+.modal-content {
+    background-color: #ffffff;
+    margin: 5% auto;
+    padding: 0;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 400px;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+}
+
+.modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.modal-header h2 {
+    font-size: 20px;
+    font-weight: 600;
+    color: #2e2e2e;
+    margin: 0;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #6c757d;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+}
+
+.close-btn:hover {
+    background-color: #f8f9fa;
+}
+
+.modal-body {
+    padding: 24px;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+.modal-actions .btn {
+    flex: 1;
+}
+
+/* 경고 메시지 */
+.warning-message {
+    background: #fff3cd;
+    border: 1px solid #ffeeba;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 20px;
+}
+
+.warning-icon {
+    font-size: 20px;
+    margin-bottom: 8px;
+}
+
+.warning-message p {
+    font-size: 14px;
+    color: #856404;
+    margin-bottom: 8px;
+    line-height: 1.5;
+}
+
+.warning-message p:last-child {
+    margin-bottom: 0;
+}
+
+/* 니모닉 표시 */
+.mnemonic-display {
+    margin-bottom: 20px;
+}
+
+.mnemonic-words {
+    background: #f8f9fa;
+    border: 2px solid #e9ecef;
+    border-radius: 12px;
+    padding: 20px;
+    font-family: 'Courier New', monospace;
+    font-size: 16px;
+    line-height: 1.8;
+    text-align: center;
+    color: #2e2e2e;
+    word-break: break-word;
+}
+
+.mnemonic-actions {
+    display: flex;
+    gap: 12px;
+}
+
+.mnemonic-actions .btn {
+    flex: 1;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 480px) {
+    .main-content {
+        padding: 20px 0;
+    }
+
+    .app-title {
+        font-size: 24px;
+    }
+
+    .logo-img {
+        width: 64px;
+        height: 64px;
+    }
+
+    .modal-content {
+        margin: 10% auto;
+        width: 95%;
+    }
+
+    .modal-header {
+        padding: 16px 20px;
+    }
+
+    .modal-body {
+        padding: 20px;
+    }
+}
+
+/* 다크 모드 */
+@media (prefers-color-scheme: dark) {
+    .security-notice {
+        background: #2d2d2d;
+        border-color: #404040;
+    }
+
+    .security-notice p {
+        color: #adb5bd;
+    }
+
+    .modal-content {
+        background-color: #2d2d2d;
+    }
+
+    .modal-header {
+        border-bottom-color: #404040;
+    }
+
+    .modal-header h2 {
+        color: #ffffff;
+    }
+
+    .mnemonic-words {
+        background: #2d2d2d;
+        border-color: #404040;
+        color: #ffffff;
+    }
+
+    .warning-message {
+        background: #3d2f00;
+        border-color: #5a4a00;
+    }
+
+    .warning-message p {
+        color: #fdcb6e;
+    }
+}

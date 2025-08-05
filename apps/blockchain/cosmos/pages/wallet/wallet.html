@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+        />
+        <title>Cosmos Wallet - 대시보드</title>
+        <link rel="stylesheet" href="../../app.css" />
+        <link rel="stylesheet" href="wallet.css" />
+    </head>
+    <body>
+        <div class="container safe-area-inset">
+            <!-- 헤더 -->
+            <div class="header">
+                <button class="back-btn" onclick="goBack()">
+                    ←
+                </button>
+                <div class="header-title">지갑</div>
+                <button
+                    class="settings-btn"
+                    onclick="showSettings()"
+                >
+                    ⚙️
+                </button>
+            </div>
+
+            <!-- 잔액 카드 -->
+            <div class="balance-card">
+                <div
+                    class="balance-amount"
+                    id="balanceAmount"
+                >
+                    0.000000
+                </div>
+                <div class="balance-currency">ATOM</div>
+                <div class="balance-usd" id="balanceUSD">
+                    ≈ $0.00 USD
+                </div>
+            </div>
+
+            <!-- 주소 정보 -->
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title"
+                        >지갑 주소</span
+                    >
+                    <button
+                        class="copy-btn"
+                        onclick="copyAddress()"
+                    >
+                        📋
+                    </button>
+                </div>
+                <div
+                    class="address-display"
+                    id="walletAddress"
+                >
+                    <span class="address-text"
+                        >로딩 중...</span
+                    >
+                </div>
+            </div>
+
+            <!-- 액션 버튼 -->
+            <div class="action-buttons">
+                <button
+                    class="action-btn btn-primary"
+                    onclick="goToSend()"
+                >
+                    <span class="btn-icon">📤</span>
+                    전송
+                </button>
+                <button
+                    class="action-btn btn-secondary"
+                    onclick="goToReceive()"
+                >
+                    <span class="btn-icon">📥</span>
+                    받기
+                </button>
+                <button
+                    class="action-btn btn-secondary"
+                    onclick="testBalance()"
+                    style="background: #6c5ce7"
+                >
+                    <span class="btn-icon">🔍</span>
+                    잔액 테스트
+                </button>
+                <button
+                    class="action-btn btn-secondary"
+                    onclick="testRpcConnection()"
+                    style="background: #00b894"
+                >
+                    <span class="btn-icon">🌐</span>
+                    RPC 테스트
+                </button>
+                <button
+                    class="action-btn btn-secondary"
+                    onclick="testRpcConnection()"
+                    style="background: #00b894"
+                >
+                    <span class="btn-icon">🌐</span>
+                    RPC 테스트
+                </button>
+            </div>
+
+            <!-- 최근 거래 내역 -->
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title"
+                        >최근 거래</span
+                    >
+                    <button
+                        class="refresh-btn"
+                        onclick="refreshTransactions()"
+                    >
+                        🔄
+                    </button>
+                </div>
+                <div
+                    class="transactions-container"
+                    id="transactionsContainer"
+                >
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        <p>거래 내역을 불러오는 중...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 설정 모달 -->
+            <div id="settingsModal" class="modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>설정</h2>
+                        <button
+                            class="close-btn"
+                            onclick="closeSettingsModal()"
+                        >
+                            &times;
+                        </button>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="settings-options">
+                            <button
+                                class="settings-option"
+                                onclick="exportWallet()"
+                            >
+                                <span class="option-icon"
+                                    >📤</span
+                                >
+                                <span class="option-text"
+                                    >지갑 내보내기</span
+                                >
+                            </button>
+
+                            <button
+                                class="settings-option"
+                                onclick="showPrivateKey()"
+                            >
+                                <span class="option-icon"
+                                    >🔑</span
+                                >
+                                <span class="option-text"
+                                    >개인키 확인</span
+                                >
+                            </button>
+
+                            <button
+                                class="settings-option"
+                                onclick="showChainInfo()"
+                            >
+                                <span class="option-icon"
+                                    >ℹ️</span
+                                >
+                                <span class="option-text"
+                                    >체인 정보</span
+                                >
+                            </button>
+
+                            <button
+                                class="settings-option"
+                                onclick="goToTest()"
+                            >
+                                <span class="option-icon"
+                                    >🧪</span
+                                >
+                                <span class="option-text"
+                                    >지갑 테스트</span
+                                >
+                            </button>
+
+                            <button
+                                class="settings-option"
+                                onclick="clearWallet()"
+                            >
+                                <span class="option-icon"
+                                    >🗑️</span
+                                >
+                                <span class="option-text"
+                                    >지갑 삭제</span
+                                >
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 체인 정보 모달 -->
+                <div id="chainInfoModal" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2>체인 정보</h2>
+                            <button
+                                class="close-btn"
+                                onclick="closeChainInfoModal()"
+                            >
+                                &times;
+                            </button>
+                        </div>
+
+                        <div class="modal-body">
+                            <div
+                                class="chain-info-details"
+                                id="chainInfoDetails"
+                            >
+                                <div class="loading">
+                                    <div
+                                        class="spinner"
+                                    ></div>
+                                    <p>
+                                        체인 정보를 불러오는
+                                        중...
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 개인키 확인 모달 -->
+            <div id="privateKeyModal" class="modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>개인키 정보</h2>
+                        <button
+                            class="close-btn"
+                            onclick="closePrivateKeyModal()"
+                        >
+                            &times;
+                        </button>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="warning-message">
+                            <div class="warning-icon">
+                                ⚠️
+                            </div>
+                            <p>
+                                <strong>경고:</strong>
+                                개인키는 절대 타인과
+                                공유하지 마세요.
+                            </p>
+                            <p>
+                                개인키가 노출되면 자산을
+                                잃을 수 있습니다.
+                            </p>
+                        </div>
+
+                        <div class="input-group">
+                            <label class="input-label"
+                                >개인키</label
+                            >
+                            <input
+                                type="password"
+                                id="privateKeyInput"
+                                class="input-field"
+                                readonly
+                            />
+                        </div>
+
+                        <div class="modal-actions">
+                            <button
+                                class="btn btn-secondary"
+                                onclick="togglePrivateKeyVisibility()"
+                            >
+                                <span class="btn-icon"
+                                    >👁️</span
+                                >
+                                표시/숨김
+                            </button>
+                            <button
+                                class="btn btn-primary"
+                                onclick="copyPrivateKey()"
+                            >
+                                <span class="btn-icon"
+                                    >📋</span
+                                >
+                                복사
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cosmos SDK 번들러 로드 -->
+        <script src="../../assets/libs/cosmos-bundle.iife.js"></script>
+        <script src="../../app.js"></script>
+        <script src="wallet.js"></script>
+
+        <!-- 전역 설정 로더 -->
+        <script src="../../assets/libs/config-loader.js"></script>
+    </body>
+</html>

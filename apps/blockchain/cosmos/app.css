@@ -1,0 +1,354 @@
+/* 모바일 우선 디자인 */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont,
+        'Segoe UI', Roboto, sans-serif;
+    background-color: #ffffff;
+    color: #2e2e2e;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.container {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 0 20px;
+    min-height: 100vh;
+}
+
+/* 헤더 스타일 */
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 0;
+    border-bottom: 1px solid #e9ecef;
+    margin-bottom: 24px;
+}
+
+.header-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #2e2e2e;
+}
+
+.back-btn {
+    background: none;
+    border: none;
+    font-size: 18px;
+    color: #6c5ce7;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 8px;
+    transition: background-color 0.2s ease;
+}
+
+.back-btn:hover {
+    background-color: #f8f9fa;
+}
+
+/* 버튼 스타일 */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-height: 48px;
+    text-decoration: none;
+    width: 100%;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #6c5ce7, #00d2ff);
+    color: white;
+    box-shadow: 0 4px 12px rgba(108, 92, 231, 0.3);
+}
+
+.btn-secondary {
+    background: #f8f9fa;
+    color: #2e2e2e;
+    border: 1px solid #e9ecef;
+}
+
+.btn-success {
+    background: #00b894;
+    color: white;
+}
+
+.btn-warning {
+    background: #fdcb6e;
+    color: #2e2e2e;
+}
+
+.btn-danger {
+    background: #e17055;
+    color: white;
+}
+
+.btn:active {
+    transform: translateY(1px);
+}
+
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* 입력 필드 */
+.input-group {
+    margin-bottom: 16px;
+}
+
+.input-label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #6c757d;
+}
+
+.input-field {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #e9ecef;
+    border-radius: 12px;
+    font-size: 16px;
+    transition: border-color 0.2s ease;
+    background-color: #ffffff;
+}
+
+.input-field:focus {
+    outline: none;
+    border-color: #6c5ce7;
+    box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.1);
+}
+
+.input-field.error {
+    border-color: #e17055;
+}
+
+/* 카드 스타일 */
+.card {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    margin-bottom: 16px;
+    border: 1px solid #e9ecef;
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+.card-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #2e2e2e;
+}
+
+/* 잔액 카드 */
+.balance-card {
+    background: linear-gradient(135deg, #6c5ce7, #00d2ff);
+    border-radius: 16px;
+    padding: 24px;
+    text-align: center;
+    color: white;
+    margin-bottom: 24px;
+    box-shadow: 0 8px 24px rgba(108, 92, 231, 0.3);
+}
+
+.balance-amount {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.balance-currency {
+    font-size: 16px;
+    opacity: 0.9;
+    margin-bottom: 8px;
+}
+
+.balance-usd {
+    font-size: 14px;
+    opacity: 0.8;
+}
+
+/* 액션 버튼 */
+.action-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.action-btn {
+    height: 56px;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+/* QR 코드 */
+.qr-container {
+    display: flex;
+    justify-content: center;
+    margin: 24px 0;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 12px;
+}
+
+/* 거래 내역 */
+.transaction-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 0;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.transaction-item:last-child {
+    border-bottom: none;
+}
+
+.transaction-info {
+    flex: 1;
+}
+
+.transaction-amount {
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.transaction-amount.sent {
+    color: #e17055;
+}
+
+.transaction-amount.received {
+    color: #00b894;
+}
+
+.transaction-date {
+    font-size: 12px;
+    color: #6c757d;
+    margin-top: 4px;
+}
+
+/* 로딩 스피너 */
+.loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+}
+
+.spinner {
+    width: 32px;
+    height: 32px;
+    border: 3px solid #e9ecef;
+    border-top: 3px solid #6c5ce7;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* 메시지 스타일 */
+.message {
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    font-size: 14px;
+}
+
+.message.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.message.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.message.warning {
+    background-color: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeeba;
+}
+
+/* 안전 영역 고려 */
+.safe-area-inset {
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* 반응형 디자인 */
+@media (max-width: 480px) {
+    .container {
+        padding: 0 16px;
+    }
+
+    .balance-amount {
+        font-size: 28px;
+    }
+
+    .action-buttons {
+        gap: 12px;
+    }
+}
+
+/* 다크 모드 지원 */
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #1a1a1a;
+        color: #ffffff;
+    }
+
+    .card {
+        background: #2d2d2d;
+        border-color: #404040;
+    }
+
+    .input-field {
+        background-color: #2d2d2d;
+        border-color: #404040;
+        color: #ffffff;
+    }
+
+    .btn-secondary {
+        background: #2d2d2d;
+        border-color: #404040;
+        color: #ffffff;
+    }
+}

@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+        />
+        <title>Cosmos Wallet - 전송</title>
+        <link rel="stylesheet" href="../../app.css" />
+        <link rel="stylesheet" href="send.css" />
+    </head>
+    <body>
+        <div class="container safe-area-inset">
+            <!-- 헤더 -->
+            <div class="header">
+                <button class="back-btn" onclick="goBack()">
+                    ←
+                </button>
+                <div class="header-title">토큰 전송</div>
+            </div>
+
+            <!-- 잔액 정보 -->
+            <div class="balance-info">
+                <div class="balance-label">
+                    사용 가능한 잔액
+                </div>
+                <div
+                    class="balance-amount"
+                    id="availableBalance"
+                >
+                    0.000000 ATOM
+                </div>
+            </div>
+
+            <!-- 전송 폼 -->
+            <div id="sendForm" class="send-form">
+                <!-- 받는 주소 -->
+                <div class="input-group">
+                    <label class="input-label"
+                        >받는 주소</label
+                    >
+                    <div class="address-input-container">
+                        <input
+                            type="text"
+                            id="recipientAddress"
+                            class="input-field"
+                            placeholder="cosmos1..."
+                            oninput="validateAddress()"
+                        />
+                        <button
+                            class="qr-btn"
+                            onclick="openQRScanner()"
+                            type="button"
+                        >
+                            📷
+                        </button>
+                    </div>
+                    <div
+                        id="addressValidation"
+                        class="validation-message"
+                    ></div>
+                </div>
+
+                <!-- 전송 금액 -->
+                <div class="input-group">
+                    <label class="input-label"
+                        >전송 금액 (ATOM)</label
+                    >
+                    <div class="amount-input-container">
+                        <input
+                            type="number"
+                            id="sendAmount"
+                            class="input-field"
+                            placeholder="0.001"
+                            step="0.001"
+                            min="0"
+                            oninput="calculateFee()"
+                        />
+                        <button
+                            class="max-btn"
+                            onclick="setMaxAmount()"
+                            type="button"
+                        >
+                            최대
+                        </button>
+                    </div>
+                    <div class="fee-info">
+                        <span
+                            >수수료:
+                            <span id="feeAmount"
+                                >0.000000</span
+                            >
+                            ATOM</span
+                        >
+                        <span
+                            >총액:
+                            <span id="totalAmount"
+                                >0.000000</span
+                            >
+                            ATOM</span
+                        >
+                    </div>
+                </div>
+
+                <!-- 수수료 선택 -->
+                <div class="input-group">
+                    <label class="input-label"
+                        >수수료 설정</label
+                    >
+                    <div class="fee-options">
+                        <label class="fee-option">
+                            <input
+                                type="radio"
+                                name="feeOption"
+                                value="low"
+                                checked
+                                onchange="updateFee()"
+                            />
+                            <span class="fee-label"
+                                >최소 (빠름)</span
+                            >
+                            <span
+                                class="fee-amount"
+                                id="lowFee"
+                                >0.000000</span
+                            >
+                        </label>
+                        <label class="fee-option">
+                            <input
+                                type="radio"
+                                name="feeOption"
+                                value="average"
+                                onchange="updateFee()"
+                            />
+                            <span class="fee-label"
+                                >평균 (권장)</span
+                            >
+                            <span
+                                class="fee-amount"
+                                id="averageFee"
+                                >0.000000</span
+                            >
+                        </label>
+                        <label class="fee-option">
+                            <input
+                                type="radio"
+                                name="feeOption"
+                                value="high"
+                                onchange="updateFee()"
+                            />
+                            <span class="fee-label"
+                                >최대 (빠름)</span
+                            >
+                            <span
+                                class="fee-amount"
+                                id="highFee"
+                                >0.000000</span
+                            >
+                        </label>
+                    </div>
+                </div>
+
+                <!-- 메모 -->
+                <div class="input-group">
+                    <label class="input-label"
+                        >메모 (선택사항)</label
+                    >
+                    <textarea
+                        id="sendMemo"
+                        class="input-field"
+                        placeholder="전송 목적을 입력하세요"
+                        rows="3"
+                    ></textarea>
+                </div>
+
+                <!-- 전송 버튼 -->
+                <button
+                    class="btn btn-primary send-btn"
+                    onclick="sendTokens()"
+                    disabled
+                >
+                    전송하기
+                </button>
+            </div>
+
+            <!-- 전송 확인 화면 -->
+            <div
+                id="confirmScreen"
+                class="confirm-screen"
+                style="display: none"
+            >
+                <div class="confirm-header">
+                    <button
+                        class="back-btn"
+                        onclick="backToSendForm()"
+                    >
+                        ←
+                    </button>
+                    <h2>전송 확인</h2>
+                </div>
+
+                <div class="confirm-content">
+                    <div class="confirm-details">
+                        <div class="confirm-item">
+                            <span class="confirm-label"
+                                >받는 주소:</span
+                            >
+                            <span
+                                class="confirm-value"
+                                id="confirmAddress"
+                            ></span>
+                        </div>
+                        <div class="confirm-item">
+                            <span class="confirm-label"
+                                >전송 금액:</span
+                            >
+                            <span
+                                class="confirm-value"
+                                id="confirmAmount"
+                            ></span>
+                        </div>
+                        <div class="confirm-item">
+                            <span class="confirm-label"
+                                >수수료:</span
+                            >
+                            <span
+                                class="confirm-value"
+                                id="confirmFee"
+                            ></span>
+                        </div>
+                        <div class="confirm-item">
+                            <span class="confirm-label"
+                                >총액:</span
+                            >
+                            <span
+                                class="confirm-value"
+                                id="confirmTotal"
+                            ></span>
+                        </div>
+                        <div
+                            class="confirm-item"
+                            id="confirmMemoItem"
+                            style="display: none"
+                        >
+                            <span class="confirm-label"
+                                >메모:</span
+                            >
+                            <span
+                                class="confirm-value"
+                                id="confirmMemo"
+                            ></span>
+                        </div>
+                    </div>
+
+                    <div class="confirm-actions">
+                        <button
+                            class="btn btn-secondary"
+                            onclick="backToSendForm()"
+                        >
+                            취소
+                        </button>
+                        <button
+                            class="btn btn-primary"
+                            onclick="confirmSend()"
+                        >
+                            전송 확인
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- QR 스캔 모달 -->
+            <div id="qrScannerModal" class="modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>QR 코드 스캔</h2>
+                        <button
+                            class="close-btn"
+                            onclick="closeQRScanner()"
+                        >
+                            &times;
+                        </button>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="qr-scanner-container">
+                            <video
+                                id="qrVideo"
+                                autoplay
+                                playsinline
+                            ></video>
+                            <div class="qr-overlay">
+                                <div class="qr-frame"></div>
+                            </div>
+                        </div>
+
+                        <div class="qr-instructions">
+                            <p>
+                                QR 코드를 프레임 안에
+                                맞춰주세요
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cosmos SDK 번들러 로드 -->
+        <script src="../../assets/libs/cosmos-bundle.iife.js"></script>
+        <script src="../../app.js"></script>
+        <script src="send.js"></script>
+
+        <!-- 전역 설정 로더 -->
+        <script src="../../assets/libs/config-loader.js"></script>
+    </body>
+</html>

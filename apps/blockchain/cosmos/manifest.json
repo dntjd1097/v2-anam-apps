@@ -1,0 +1,21 @@
+{
+    "name": "Cosmos Wallet",
+    "description": "Cosmos SDK 기반 블록체인을 위한 모바일 최적화 지갑",
+    "version": "1.0.0",
+    "icon": "assets/icons/app_icon.png",
+    "pages": [
+        "pages/index/index",
+        "pages/wallet/wallet",
+        "pages/send/send",
+        "pages/receive/receive"
+    ],
+    "permissions": [
+        "camera",
+        "storage"
+    ],
+    "theme": {
+        "primary_color": "#6C5CE7",
+        "secondary_color": "#00D2FF",
+        "background_color": "#FFFFFF"
+    }
+}

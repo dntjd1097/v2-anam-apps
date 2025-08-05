@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+        />
+        <title>Cosmos Wallet - 받기</title>
+        <link rel="stylesheet" href="../../app.css" />
+        <link rel="stylesheet" href="receive.css" />
+    </head>
+    <body>
+        <div class="container safe-area-inset">
+            <!-- 헤더 -->
+            <div class="header">
+                <button class="back-btn" onclick="goBack()">
+                    ←
+                </button>
+                <div class="header-title">토큰 받기</div>
+            </div>
+
+            <!-- 주소 정보 -->
+            <div class="address-section">
+                <div class="address-label">
+                    내 지갑 주소
+                </div>
+                <div
+                    class="address-display"
+                    id="walletAddress"
+                >
+                    <span class="address-text"
+                        >로딩 중...</span
+                    >
+                </div>
+                <button
+                    class="copy-btn"
+                    onclick="copyAddress()"
+                >
+                    <span class="btn-icon">📋</span>
+                    주소 복사
+                </button>
+            </div>
+
+            <!-- QR 코드 -->
+            <div class="qr-section">
+                <div class="qr-container">
+                    <div id="qrCode" class="qr-code"></div>
+                </div>
+                <div class="qr-info">
+                    <p>
+                        QR 코드를 스캔하여 ATOM을 받을 수
+                        있습니다
+                    </p>
+                </div>
+            </div>
+
+            <!-- 추가 옵션 -->
+            <div class="options-section">
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title"
+                            >받기 옵션</span
+                        >
+                    </div>
+
+                    <div class="option-group">
+                        <label class="option-label"
+                            >받을 금액 지정
+                            (선택사항)</label
+                        >
+                        <div class="amount-input-container">
+                            <input
+                                type="number"
+                                id="receiveAmount"
+                                class="input-field"
+                                placeholder="0.000000"
+                                step="0.000001"
+                                min="0"
+                                oninput="updateQRCode()"
+                            />
+                            <span class="currency-label"
+                                >ATOM</span
+                            >
+                        </div>
+                    </div>
+
+                    <div class="option-group">
+                        <label class="option-label"
+                            >메모 추가 (선택사항)</label
+                        >
+                        <textarea
+                            id="receiveMemo"
+                            class="input-field"
+                            placeholder="받기 목적을 입력하세요"
+                            rows="2"
+                            oninput="updateQRCode()"
+                        ></textarea>
+                    </div>
+
+                    <div class="option-actions">
+                        <button
+                            class="btn btn-secondary"
+                            onclick="clearOptions()"
+                        >
+                            초기화
+                        </button>
+                        <button
+                            class="btn btn-primary"
+                            onclick="generateNewQR()"
+                        >
+                            새 QR 생성
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 공유 옵션 -->
+            <div class="share-section">
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title"
+                            >공유하기</span
+                        >
+                    </div>
+
+                    <div class="share-options">
+                        <button
+                            class="share-btn"
+                            onclick="shareAddress()"
+                        >
+                            <span class="share-icon"
+                                >📤</span
+                            >
+                            주소 공유
+                        </button>
+
+                        <button
+                            class="share-btn"
+                            onclick="shareQR()"
+                        >
+                            <span class="share-icon"
+                                >🖼️</span
+                            >
+                            QR 이미지 공유
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 보안 안내 -->
+            <div class="security-notice">
+                <div class="notice-icon">🔒</div>
+                <div class="notice-content">
+                    <h3>보안 안내</h3>
+                    <ul>
+                        <li>
+                            이 주소는 ATOM만 받을 수
+                            있습니다
+                        </li>
+                        <li>
+                            다른 코인을 보내면 손실될 수
+                            있습니다
+                        </li>
+                        <li>
+                            주소는 안전하게 공유해도 됩니다
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- QR 코드 라이브러리 -->
+        <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+        <!-- Cosmos SDK 번들러 로드 -->
+        <script src="../../assets/libs/cosmos-bundle.iife.js"></script>
+        <script src="../../app.js"></script>
+        <script src="receive.js"></script>
+
+        <!-- 전역 설정 로더 -->
+        <script src="../../assets/libs/config-loader.js"></script>
+    </body>
+</html>
