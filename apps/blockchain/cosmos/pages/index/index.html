@@ -11,173 +11,159 @@
         <link rel="stylesheet" href="index.css" />
     </head>
     <body>
-        <div class="container safe-area-inset">
-            <!-- 헤더 -->
+        <div class="container">
             <div class="header">
-                <div class="header-title">
-                    Cosmos Wallet
-                </div>
+                <h1>Cosmos Wallet</h1>
             </div>
 
-            <!-- 메인 콘텐츠 -->
             <div class="main-content">
-                <!-- 로고 영역 -->
-                <div class="logo-section">
-                    <div class="logo">
-                        <img
-                            src="../../assets/images/logo.png"
-                            alt="Cosmos Logo"
-                            class="logo-img"
-                        />
-                    </div>
-                    <h1 class="app-title">Cosmos Wallet</h1>
-                    <p class="app-subtitle">
-                        안전하고 간편한 Cosmos 지갑
-                    </p>
+                <div class="welcome-card">
+                    <h2>지갑을 생성하거나 불러오세요</h2>
+                    <p>안전한 Cosmos 지갑을 시작해보세요</p>
                 </div>
 
-                <!-- 지갑 생성/복원 버튼 -->
-                <div class="wallet-actions">
-                    <button
-                        class="btn btn-primary"
-                        onclick="createNewWallet()"
+                <!-- 지갑 생성 섹션 -->
+                <div class="section">
+                    <h3>지갑 생성하기</h3>
+
+                    <div
+                        class="radio-group"
+                        id="createTypeGroup"
                     >
-                        <span class="btn-icon">🆕</span>
-                        새 지갑 생성
+                        <div
+                            class="radio-option"
+                            data-type="mnemonic-12"
+                        >
+                            <input
+                                type="radio"
+                                name="createType"
+                                value="mnemonic-12"
+                                id="mnemonic-12"
+                            />
+                            <label for="mnemonic-12"
+                                >12단어 니모닉</label
+                            >
+                        </div>
+                        <div
+                            class="radio-option"
+                            data-type="mnemonic-24"
+                        >
+                            <input
+                                type="radio"
+                                name="createType"
+                                value="mnemonic-24"
+                                id="mnemonic-24"
+                            />
+                            <label for="mnemonic-24"
+                                >24단어 니모닉</label
+                            >
+                        </div>
+                        <div
+                            class="radio-option"
+                            data-type="private"
+                        >
+                            <input
+                                type="radio"
+                                name="createType"
+                                value="private"
+                                id="private"
+                            />
+                            <label for="private"
+                                >Private Key</label
+                            >
+                        </div>
+                    </div>
+
+                    <button
+                        class="btn"
+                        id="createWalletBtn"
+                    >
+                        지갑 생성하기
                     </button>
+                </div>
+
+                <!-- 지갑 불러오기 섹션 -->
+                <div class="section">
+                    <h3>지갑 불러오기</h3>
+
+                    <div
+                        class="radio-group"
+                        id="importTypeGroup"
+                    >
+                        <div
+                            class="radio-option"
+                            data-type="mnemonic"
+                        >
+                            <input
+                                type="radio"
+                                name="importType"
+                                value="mnemonic"
+                                id="import-mnemonic"
+                            />
+                            <label for="import-mnemonic"
+                                >니모닉으로 불러오기</label
+                            >
+                        </div>
+                        <div
+                            class="radio-option"
+                            data-type="private"
+                        >
+                            <input
+                                type="radio"
+                                name="importType"
+                                value="private"
+                                id="import-private"
+                            />
+                            <label for="import-private"
+                                >Private Key로
+                                불러오기</label
+                            >
+                        </div>
+                    </div>
 
                     <button
                         class="btn btn-secondary"
-                        onclick="showRestoreWallet()"
+                        id="importWalletBtn"
                     >
-                        <span class="btn-icon">📥</span>
-                        지갑 복원
+                        지갑 불러오기
                     </button>
-                </div>
-
-                <!-- 보안 안내 -->
-                <div class="security-notice">
-                    <div class="notice-icon">🔒</div>
-                    <p>
-                        지갑 정보는 안전하게 암호화되어
-                        저장됩니다.
-                    </p>
-                    <p>
-                        니모닉 구문을 안전한 곳에
-                        백업하세요.
-                    </p>
-                </div>
-            </div>
-
-            <!-- 지갑 복원 모달 -->
-            <div id="restoreModal" class="modal">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h2>지갑 복원</h2>
-                        <button
-                            class="close-btn"
-                            onclick="closeRestoreModal()"
-                        >
-                            &times;
-                        </button>
-                    </div>
-
-                    <div class="modal-body">
-                        <div class="input-group">
-                            <label class="input-label"
-                                >니모닉 구문 (12개 또는 24개
-                                단어)</label
-                            >
-                            <textarea
-                                id="mnemonicInput"
-                                class="input-field"
-                                placeholder="단어들을 공백으로 구분하여 입력하세요"
-                                rows="4"
-                            ></textarea>
-                        </div>
-
-                        <div class="modal-actions">
-                            <button
-                                class="btn btn-secondary"
-                                onclick="closeRestoreModal()"
-                            >
-                                취소
-                            </button>
-                            <button
-                                class="btn btn-primary"
-                                onclick="restoreWallet()"
-                            >
-                                복원
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 니모닉 확인 모달 -->
-            <div id="mnemonicModal" class="modal">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h2>니모닉 확인</h2>
-                        <button
-                            class="close-btn"
-                            onclick="closeMnemonicModal()"
-                        >
-                            &times;
-                        </button>
-                    </div>
-
-                    <div class="modal-body">
-                        <div class="warning-message">
-                            <div class="warning-icon">
-                                ⚠️
-                            </div>
-                            <p>
-                                <strong>중요:</strong> 이
-                                12개 단어를 안전한 곳에
-                                기록하세요.
-                            </p>
-                            <p>
-                                지갑 복원에 필요하며, 분실
-                                시 자산을 잃을 수 있습니다.
-                            </p>
-                        </div>
-
-                        <div class="mnemonic-display">
-                            <div
-                                id="mnemonicWords"
-                                class="mnemonic-words"
-                            ></div>
-                        </div>
-
-                        <div class="mnemonic-actions">
-                            <button
-                                class="btn btn-secondary"
-                                onclick="copyMnemonic()"
-                            >
-                                <span class="btn-icon"
-                                    >📋</span
-                                >
-                                복사
-                            </button>
-                            <button
-                                class="btn btn-primary"
-                                onclick="confirmMnemonic()"
-                            >
-                                확인 완료
-                            </button>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Cosmos SDK 번들러 로드 -->
+        <!-- 모달 -->
+        <div id="modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="modalTitle">지갑 생성</h3>
+                    <button
+                        class="close-btn"
+                        id="closeModal"
+                    >
+                        &times;
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="modalContent"></div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn" id="confirmBtn">
+                        확인
+                    </button>
+                    <button
+                        class="btn btn-secondary"
+                        id="cancelBtn"
+                    >
+                        취소
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- CosmosJS 번들 로드 -->
         <script src="../../assets/libs/cosmos-bundle.iife.js"></script>
+        <!-- 앱 스크립트들 -->
         <script src="../../app.js"></script>
         <script src="index.js"></script>
-
-        <!-- 전역 설정 로더 -->
-        <script src="../../assets/libs/config-loader.js"></script>
     </body>
 </html>

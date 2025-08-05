@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+        />
+        <title>Cosmos Wallet - 메인</title>
+        <link rel="stylesheet" href="../../app.css" />
+        <link rel="stylesheet" href="main.css" />
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <button class="back-btn">←</button>
+                <h1>Cosmos Wallet</h1>
+                <button
+                    class="settings-btn"
+                    onclick="goToSettings()"
+                >
+                    ⚙️
+                </button>
+            </div>
+
+            <div class="main-content">
+                <!-- 잔액 카드 -->
+                <div class="balance-card">
+                    <div class="balance-icon">💰</div>
+                    <div
+                        class="balance-amount"
+                        id="balanceAmount"
+                    >
+                        0.000000
+                    </div>
+                    <div class="balance-symbol">ATOM</div>
+                    <div
+                        class="balance-usd"
+                        id="balanceUsd"
+                    >
+                        ≈ $0.00
+                    </div>
+                </div>
+
+                <!-- 액션 버튼들 -->
+                <div class="action-buttons">
+                    <div
+                        class="action-btn"
+                        onclick="goToSend()"
+                    >
+                        <div class="icon">📤</div>
+                        <div class="label">전송</div>
+                    </div>
+                    <div
+                        class="action-btn"
+                        onclick="goToReceive()"
+                    >
+                        <div class="icon">📥</div>
+                        <div class="label">받기</div>
+                    </div>
+                </div>
+
+                <!-- 지갑 주소 -->
+                <div class="address-section">
+                    <div class="address-label">
+                        지갑 주소
+                    </div>
+                    <div
+                        class="address-display"
+                        id="walletAddress"
+                    >
+                        로딩 중...
+                    </div>
+                    <button
+                        class="copy-btn"
+                        onclick="copyAddress()"
+                    >
+                        주소 복사
+                    </button>
+                </div>
+
+                <!-- 최근 거래 내역 -->
+                <div class="recent-transactions">
+                    <div class="section-header">
+                        <h3>최근 거래</h3>
+                        <button
+                            class="view-all-btn"
+                            onclick="goToHistory()"
+                        >
+                            전체 보기
+                        </button>
+                    </div>
+                    <div
+                        class="transaction-list"
+                        id="transactionList"
+                    >
+                        <div class="no-transactions">
+                            <div
+                                class="no-transactions-icon"
+                            >
+                                📋
+                            </div>
+                            <div
+                                class="no-transactions-text"
+                            >
+                                거래 내역이 없습니다
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 새로고침 버튼 -->
+                <div class="refresh-section">
+                    <button
+                        class="refresh-btn"
+                        onclick="refreshData()"
+                    >
+                        <span class="refresh-icon">🔄</span>
+                        새로고침
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 로딩 오버레이 -->
+        <div id="loadingOverlay" class="loading-overlay">
+            <div class="loading-spinner"></div>
+            <div class="loading-text">
+                잔액을 불러오는 중...
+            </div>
+        </div>
+
+        <!-- CosmosJS 번들 로드 -->
+        <script src="../../assets/libs/cosmos-bundle.iife.js"></script>
+        <!-- 앱 스크립트들 -->
+        <script src="../../app.js"></script>
+        <script src="main.js"></script>
+    </body>
+</html>
