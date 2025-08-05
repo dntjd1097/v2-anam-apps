@@ -39,90 +39,7 @@ if (typeof window !== 'undefined') {
     window.Buffer = Buffer;
 }
 
-// 설정 파일 로드 함수
-const loadConfig = async () => {
-    try {
-        // 브라우저 환경에서는 fetch를 사용하여 config.json 로드
-        if (typeof window !== 'undefined') {
-            const response = await fetch('./config.json');
-            if (!response.ok) {
-                throw new Error(
-                    `Failed to load config: ${response.status}`
-                );
-            }
-            return await response.json();
-        } else {
-            // Node.js 환경에서는 fs를 사용
-            const fs = require('fs');
-            const path = require('path');
-            const configPath = path.join(
-                __dirname,
-                '../config.json'
-            );
-            const configData = fs.readFileSync(
-                configPath,
-                'utf8'
-            );
-            return JSON.parse(configData);
-        }
-    } catch (error) {
-        console.error('Failed to load config.json:', error);
-        // 기본 설정 반환
-        return {
-            chain_name: 'cosmoshub',
-            chain_id: 'cosmoshub-4',
-            bech32_prefix: 'cosmos',
-            slip44: 118,
-            fees: {
-                fee_tokens: [
-                    {
-                        denom: 'uatom',
-                        average_gas_price: 0.025,
-                    },
-                ],
-            },
-            assets: [
-                {
-                    denom_units: [
-                        { denom: 'uatom', exponent: 0 },
-                        { denom: 'atom', exponent: 6 },
-                    ],
-                    base: 'uatom',
-                    symbol: 'ATOM',
-                },
-            ],
-            apis: {
-                rpc: [
-                    {
-                        address:
-                            'https://cosmos-rpc.quickapi.com:443',
-                        provider: 'Default',
-                    },
-                ],
-                rest: [
-                    {
-                        address:
-                            'https://cosmos-lcd.quickapi.com/',
-                        provider: 'Default',
-                    },
-                ],
-                grpc: [],
-            },
-            explorers: [
-                {
-                    kind: 'mintscan',
-                    url: 'https://www.mintscan.io/cosmos',
-                    tx_page:
-                        'https://www.mintscan.io/cosmos/transactions/${txHash}',
-                    account_page:
-                        'https://www.mintscan.io/cosmos/accounts/${accountAddress}',
-                },
-            ],
-        };
-    }
-};
-
-// 전역 설정 변수
+// 전역 설정 변수 (나중에 외부에서 설정할 수 있도록)
 let chainConfig = null;
 
 // CosmosJS 객체 생성
@@ -499,19 +416,37 @@ const CosmosJS = {
 
     // 설정 관련 메서드들
 
-    // 설정 초기화
-    initializeConfig: async () => {
-        if (!chainConfig) {
-            chainConfig = await loadConfig();
+    // 설정 등록 (외부에서 호출하여 설정을 등록)
+    registerConfig: (config) => {
+        if (!config) {
+            throw new Error('Config is required');
         }
-        return chainConfig;
+
+        // 필수 필드 검증
+        if (
+            !config.chain_id ||
+            !config.bech32_prefix ||
+            !config.assets ||
+            !config.apis
+        ) {
+            throw new Error(
+                'Invalid config: missing required fields'
+            );
+        }
+
+        chainConfig = config;
+        console.log(
+            'Config registered successfully:',
+            config.chain_name
+        );
+        return true;
     },
 
     // 설정 가져오기
     getConfig: () => {
         if (!chainConfig) {
             throw new Error(
-                'Config not initialized. Call initializeConfig() first.'
+                'Config not registered. Call registerConfig() first.'
             );
         }
         return chainConfig;
@@ -600,8 +535,6 @@ const CosmosJS = {
 // 전역 변수로도 노출 (미니앱에서 사용하기 위해)
 if (typeof window !== 'undefined') {
     window.CosmosJS = CosmosJS;
-    // 설정 자동 초기화
-    CosmosJS.initializeConfig().catch(console.error);
 }
 
 // UMD를 위한 default export
