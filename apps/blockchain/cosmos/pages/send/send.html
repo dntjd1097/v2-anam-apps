@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+        />
+        <title>Cosmos Wallet - 전송</title>
+        <link rel="stylesheet" href="../../app.css" />
+        <link rel="stylesheet" href="send.css" />
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <button class="back-btn" onclick="goBack()">
+                    ←
+                </button>
+                <h1>전송</h1>
+                <div class="header-actions">
+                    <button
+                        class="scan-btn"
+                        onclick="scanQR()"
+                        aria-label="QR 코드 스캔"
+                    >
+                        📷
+                    </button>
+                </div>
+            </div>
+
+            <div class="main-content">
+                <!-- 잔액 정보 -->
+                <div class="balance-info">
+                    <div class="balance-label">
+                        사용 가능한 잔액
+                    </div>
+                    <div
+                        class="balance-amount"
+                        id="availableBalance"
+                    >
+                        0.000000 ATOM
+                    </div>
+                    <div
+                        class="balance-usd"
+                        id="balanceUsd"
+                    >
+                        ≈ $0.00
+                    </div>
+                </div>
+
+                <!-- 전송 폼 -->
+                <form class="send-form" id="sendForm">
+                    <!-- 받는 주소 -->
+                    <div class="form-group">
+                        <label for="recipientAddress"
+                            >받는 주소</label
+                        >
+                        <div
+                            class="address-input-container"
+                        >
+                            <input
+                                type="text"
+                                id="recipientAddress"
+                                class="address-input"
+                                placeholder="cosmos1..."
+                                required
+                            />
+                            <button
+                                type="button"
+                                class="paste-btn"
+                                onclick="pasteAddress()"
+                                aria-label="주소 붙여넣기"
+                            >
+                                📋
+                            </button>
+                        </div>
+                        <div class="input-hint">
+                            유효한 Cosmos 주소를 입력하세요
+                        </div>
+                    </div>
+
+                    <!-- 전송 금액 -->
+                    <div class="form-group">
+                        <label for="sendAmount"
+                            >전송 금액</label
+                        >
+                        <div class="amount-input-container">
+                            <input
+                                type="number"
+                                id="sendAmount"
+                                class="amount-input"
+                                placeholder="0.000000"
+                                step="0.000001"
+                                min="0"
+                                required
+                            />
+                            <div
+                                class="amount-symbol"
+                                id="amountSymbol"
+                            >
+                                ATOM
+                            </div>
+                        </div>
+                        <div class="amount-actions">
+                            <button
+                                type="button"
+                                class="amount-btn"
+                                onclick="setAmount(0.25)"
+                            >
+                                25%
+                            </button>
+                            <button
+                                type="button"
+                                class="amount-btn"
+                                onclick="setAmount(0.5)"
+                            >
+                                50%
+                            </button>
+                            <button
+                                type="button"
+                                class="amount-btn"
+                                onclick="setAmount(0.75)"
+                            >
+                                75%
+                            </button>
+                            <button
+                                type="button"
+                                class="amount-btn"
+                                onclick="setAmount(1)"
+                            >
+                                전체
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 수수료 설정 -->
+                    <div class="form-group">
+                        <label for="gasLimit"
+                            >가스 한도</label
+                        >
+                        <div class="gas-input-container">
+                            <input
+                                type="number"
+                                id="gasLimit"
+                                class="gas-input"
+                                value="200000"
+                                min="100000"
+                                max="1000000"
+                                required
+                            />
+                            <div class="gas-unit">gas</div>
+                        </div>
+                        <div class="gas-actions">
+                            <button
+                                type="button"
+                                class="gas-btn"
+                                onclick="setGas('low')"
+                            >
+                                낮음
+                            </button>
+                            <button
+                                type="button"
+                                class="gas-btn active"
+                                onclick="setGas('medium')"
+                            >
+                                보통
+                            </button>
+                            <button
+                                type="button"
+                                class="gas-btn"
+                                onclick="setGas('high')"
+                            >
+                                높음
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 메모 (선택사항) -->
+                    <div class="form-group">
+                        <label for="memo"
+                            >메모 (선택사항)</label
+                        >
+                        <textarea
+                            id="memo"
+                            class="memo-input"
+                            placeholder="전송 메모를 입력하세요..."
+                            rows="3"
+                            maxlength="200"
+                        ></textarea>
+                        <div class="memo-counter">
+                            <span id="memoCount">0</span
+                            >/200
+                        </div>
+                    </div>
+
+                    <!-- 전송 요약 -->
+                    <div
+                        class="send-summary"
+                        id="sendSummary"
+                        style="display: none"
+                    >
+                        <h3>전송 요약</h3>
+                        <div class="summary-item">
+                            <span class="summary-label"
+                                >받는 주소:</span
+                            >
+                            <span
+                                class="summary-value"
+                                id="summaryAddress"
+                                >-</span
+                            >
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label"
+                                >전송 금액:</span
+                            >
+                            <span
+                                class="summary-value"
+                                id="summaryAmount"
+                                >-</span
+                            >
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label"
+                                >수수료:</span
+                            >
+                            <span
+                                class="summary-value"
+                                id="summaryFee"
+                                >-</span
+                            >
+                        </div>
+                        <div class="summary-item total">
+                            <span class="summary-label"
+                                >총 전송:</span
+                            >
+                            <span
+                                class="summary-value"
+                                id="summaryTotal"
+                                >-</span
+                            >
+                        </div>
+                    </div>
+
+                    <!-- 전송 버튼 -->
+                    <div class="send-actions">
+                        <button
+                            type="button"
+                            class="btn btn-secondary"
+                            onclick="goBack()"
+                        >
+                            취소
+                        </button>
+                        <button
+                            type="submit"
+                            class="btn btn-primary"
+                            id="sendButton"
+                            disabled
+                        >
+                            전송하기
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- 확인 모달 -->
+        <div id="confirmModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>전송 확인</h3>
+                    <button
+                        class="close-btn"
+                        onclick="closeConfirmModal()"
+                    >
+                        &times;
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div
+                        class="confirm-content"
+                        id="confirmContent"
+                    >
+                        <!-- 확인 내용이 여기에 표시됩니다 -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button
+                        class="btn btn-secondary"
+                        onclick="closeConfirmModal()"
+                    >
+                        취소
+                    </button>
+                    <button
+                        class="btn btn-primary"
+                        onclick="confirmSend()"
+                    >
+                        전송 확인
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 로딩 오버레이 -->
+        <div id="loadingOverlay" class="loading-overlay">
+            <div class="loading-spinner"></div>
+            <div class="loading-text" id="loadingText">
+                전송 중...
+            </div>
+        </div>
+
+        <!-- CosmosJS 번들 로드 -->
+        <script src="../../assets/libs/cosmos-bundle.iife.js"></script>
+        <!-- 앱 스크립트들 -->
+        <script src="../../app.js"></script>
+        <script src="send.js"></script>
+    </body>
+</html>

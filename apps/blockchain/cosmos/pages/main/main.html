@@ -15,18 +15,32 @@
             <div class="header">
                 <button class="back-btn">←</button>
                 <h1>Cosmos Wallet</h1>
-                <button
-                    class="settings-btn"
-                    onclick="goToSettings()"
-                >
-                    ⚙️
-                </button>
+                <div class="header-actions">
+                    <button
+                        class="settings-btn"
+                        onclick="goToSettings()"
+                    >
+                        ⚙️
+                    </button>
+                </div>
             </div>
 
             <div class="main-content">
                 <!-- 잔액 카드 -->
                 <div class="balance-card">
+                    <div class="balance-header">
+                        <button
+                            class="refresh-header-btn"
+                            onclick="refreshBalance()"
+                            aria-label="잔액 새로고침"
+                        >
+                            <span class="refresh-icon"
+                                >🔄</span
+                            >
+                        </button>
+                    </div>
                     <div class="balance-icon">💰</div>
+
                     <div
                         class="balance-amount"
                         id="balanceAmount"
@@ -107,17 +121,6 @@
                             </div>
                         </div>
                     </div>
-                </div>
-
-                <!-- 새로고침 버튼 -->
-                <div class="refresh-section">
-                    <button
-                        class="refresh-btn"
-                        onclick="refreshData()"
-                    >
-                        <span class="refresh-icon">🔄</span>
-                        새로고침
-                    </button>
                 </div>
             </div>
         </div>

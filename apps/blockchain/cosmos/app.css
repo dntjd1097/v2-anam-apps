@@ -116,17 +116,61 @@ body {
     padding: 8px;
 }
 
-.settings-btn {
+.header-actions {
     position: absolute;
     right: 20px;
     top: 50%;
     transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.refresh-header-btn {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.refresh-header-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.1);
+}
+
+.refresh-header-btn:active {
+    transform: scale(0.95);
+}
+
+.refresh-header-btn .refresh-icon {
+    font-size: 16px;
+    color: white;
+    transition: transform 0.3s ease;
+}
+
+.refresh-header-btn:hover .refresh-icon {
+    transform: rotate(180deg);
+}
+
+.settings-btn {
     background: none;
     border: none;
     color: white;
     font-size: 18px;
     cursor: pointer;
     padding: 8px;
+    transition: all 0.3s ease;
+}
+
+.settings-btn:hover {
+    transform: scale(1.1);
 }
 
 /* 메인 콘텐츠 */

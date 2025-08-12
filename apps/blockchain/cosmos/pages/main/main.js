@@ -500,19 +500,14 @@ function displayNoTransactions() {
 }
 
 function setupEventListeners() {
-    // 새로고침 버튼
-    const refreshBtn =
-        document.querySelector('.refresh-btn');
-    if (refreshBtn) {
-        refreshBtn.addEventListener('click', refreshData);
-    }
+    // 이벤트 리스너 설정 (필요시 추가)
 }
 
-function refreshData() {
+function refreshBalance() {
     loadBalance();
     loadRecentTransactions();
     window.CryptoWalletApp.utils.showToast(
-        '데이터를 새로고침했습니다.'
+        '잔액을 새로고침했습니다.'
     );
 }
 

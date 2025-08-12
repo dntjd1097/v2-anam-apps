@@ -518,7 +518,7 @@ const CosmosJS = {
     getDefaultRestUrl: () => {
         const config = CosmosJS.getConfig();
         const apiEndpoints = config.apis.rest;
-        const randomIndex = Math.floor(
+        const randomIndex = Math.floor( 
             Math.random() * apiEndpoints.length
         );
         return apiEndpoints[randomIndex].address;
