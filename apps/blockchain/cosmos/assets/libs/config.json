@@ -68,6 +68,10 @@
     "apis": {
         "rpc": [
             {
+                "address": "https://rpc.cosmos.directory/cosmoshub",
+                "provider": "cosmos.directory"
+            },
+            {
                 "address": "https://cosmoshub.tendermintrpc.lava.build:443",
                 "provider": "Lava"
             },

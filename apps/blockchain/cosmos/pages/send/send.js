@@ -611,7 +611,3 @@ function showLoading(show, text = '로딩 중...') {
         }
     }
 }
-
-function goBack() {
-    window.CryptoWalletApp.goBack();
-}

@@ -218,16 +218,64 @@ window.CryptoWalletApp = {
 
     // 뒤로가기 (지갑 삭제 후 index로)
     goBack() {
+        // 현재 페이지에 따라 적절한 동작
+        if (
+            this.currentPage === 'settings' ||
+            this.currentPage === 'send' ||
+            this.currentPage === 'receive'
+        ) {
+            this.navigateTo('main');
+        } else {
+            // main 페이지에서만 지갑 삭제
+            this.logout();
+        }
+    },
+
+    // 일반 뒤로가기 (지갑 삭제 없음)
+    goBackSafe() {
+        // 현재 페이지에 따라 적절한 페이지로 이동
+        if (
+            this.currentPage === 'settings' ||
+            this.currentPage === 'send' ||
+            this.currentPage === 'receive'
+        ) {
+            this.navigateTo('main');
+        } else {
+            // main 페이지에서는 main으로 (무한 루프 방지)
+            this.navigateTo('main');
+        }
+    },
+
+    // 지갑 삭제 후 index로 (로그아웃용)
+    logout() {
         this.deleteWallet();
         this.navigateTo('index');
     },
 
     // 이벤트 리스너 설정
     setupEventListeners() {
-        // 뒤로가기 버튼 이벤트
+        // 뒤로가기 버튼 이벤트 (기본적으로는 안전한 뒤로가기)
         document.addEventListener('click', (e) => {
             if (e.target.classList.contains('back-btn')) {
-                this.goBack();
+                // 현재 페이지 확인
+                const currentUrl = window.location.href;
+                if (
+                    currentUrl.includes('/settings/') ||
+                    currentUrl.includes('/send/') ||
+                    currentUrl.includes('/receive/')
+                ) {
+                    // 설정 페이지나 전송 페이지에서는 안전한 뒤로가기
+                    this.goBackSafe();
+                } else if (currentUrl.includes('/index/')) {
+                    // 인덱스 페이지에서는 로그아웃 (지갑 삭제)
+                    this.logout();
+                } else if (currentUrl.includes('/main/')) {
+                    // main 페이지에서는 로그아웃 (지갑 삭제)
+                    this.logout();
+                } else {
+                    // 다른 페이지에서는 안전한 뒤로가기
+                    this.goBackSafe();
+                }
             }
         });
     },
