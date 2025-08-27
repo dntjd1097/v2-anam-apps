@@ -1,0 +1,12 @@
+{
+    "name": "Cosmos Wallet",
+    "icon": "assets/icons/app_icon.png",
+    "pages": [
+        "pages/index/index",
+        "pages/main/main",
+        "pages/send/send",
+        "pages/receive/receive",
+        "pages/history/history",
+        "pages/settings/settings"
+    ]
+}

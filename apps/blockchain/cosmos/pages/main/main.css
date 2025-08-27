@@ -1,0 +1,407 @@
+/* Main 페이지 스타일 */
+
+.balance-card {
+    text-align: center;
+    background: linear-gradient(
+        135deg,
+        #667eea 0%,
+        #764ba2 100%
+    );
+    color: white;
+    border-radius: 20px;
+    padding: 30px 20px;
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+}
+
+.balance-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(
+        circle,
+        rgba(255, 255, 255, 0.1) 0%,
+        transparent 70%
+    );
+    animation: shimmer 3s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+    0%,
+    100% {
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+    50% {
+        transform: translate(-50%, -50%) rotate(180deg);
+    }
+}
+.balance-header {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-bottom: 16px;
+}
+.balance-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+    opacity: 0.9;
+}
+
+.balance-amount {
+    font-size: 36px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.balance-symbol {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    opacity: 0.9;
+}
+
+.balance-usd {
+    font-size: 14px;
+    opacity: 0.8;
+}
+
+.action-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.action-btn {
+    background: white;
+    border: 2px solid #e9ecef;
+    padding: 20px;
+    border-radius: 16px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.action-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(102, 126, 234, 0.1),
+        transparent
+    );
+    transition: left 0.5s;
+}
+
+.action-btn:hover::before {
+    left: 100%;
+}
+
+.action-btn:hover {
+    border-color: #667eea;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
+}
+
+.action-btn .icon {
+    font-size: 32px;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.action-btn .label {
+    font-weight: 600;
+    color: #333;
+    font-size: 16px;
+}
+
+.address-section {
+    background: white;
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.address-label {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 12px;
+    font-size: 14px;
+}
+
+.address-display {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-family: monospace;
+    font-size: 14px;
+    word-break: break-all;
+    margin-bottom: 12px;
+    border: 1px solid #e9ecef;
+    color: #495057;
+}
+
+.copy-btn {
+    background: #667eea;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    width: 100%;
+}
+
+.copy-btn:hover {
+    background: #5a6fd8;
+}
+
+.recent-transactions {
+    background: white;
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.section-header h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+}
+
+.view-all-btn {
+    background: none;
+    border: none;
+    color: #667eea;
+    font-size: 14px;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.view-all-btn:hover {
+    color: #5a6fd8;
+}
+
+.transaction-list {
+    min-height: 100px;
+}
+
+.no-transactions {
+    text-align: center;
+    padding: 40px 20px;
+    color: #6c757d;
+}
+
+.no-transactions-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+    opacity: 0.5;
+}
+
+.no-transactions-text {
+    font-size: 14px;
+}
+
+.transaction-item {
+    display: flex;
+    align-items: center;
+    padding: 16px;
+    border-bottom: 1px solid #f1f3f4;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.transaction-item:hover {
+    background: #f8f9fa;
+}
+
+.transaction-item:last-child {
+    border-bottom: none;
+}
+
+.transaction-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 12px;
+    font-size: 18px;
+    color: white;
+}
+
+.transaction-icon.send {
+    background: linear-gradient(
+        135deg,
+        #ff6b6b 0%,
+        #ee5a52 100%
+    );
+}
+
+.transaction-icon.receive {
+    background: linear-gradient(
+        135deg,
+        #51cf66 0%,
+        #40c057 100%
+    );
+}
+
+.transaction-icon.delegate {
+    background: linear-gradient(
+        135deg,
+        #ffd43b 0%,
+        #fcc419 100%
+    );
+}
+
+.transaction-details {
+    flex: 1;
+}
+
+.transaction-amount {
+    font-weight: 600;
+    font-size: 16px;
+    margin-bottom: 4px;
+}
+
+.transaction-address {
+    font-size: 12px;
+    color: #495057;
+    margin-bottom: 4px;
+    font-family: 'Courier New', monospace;
+}
+
+.transaction-date {
+    font-size: 12px;
+    color: #6c757d;
+}
+
+.transaction-memo {
+    font-size: 11px;
+    color: #6c757d;
+    margin-bottom: 2px;
+    font-style: italic;
+    background: #f8f9fa;
+    padding: 2px 6px;
+    border-radius: 4px;
+    display: inline-block;
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.transaction-fee {
+    font-size: 11px;
+    color: #495057;
+    margin-bottom: 2px;
+    background: #e9ecef;
+    padding: 2px 6px;
+    border-radius: 4px;
+    display: inline-block;
+}
+
+.transaction-status {
+    font-size: 11px;
+    font-weight: 600;
+    margin-bottom: 2px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    display: inline-block;
+}
+
+.transaction-status.success {
+    background: #d4edda;
+    color: #155724;
+}
+
+.transaction-status.failed {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+/* 로딩 오버레이 */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.9);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    z-index: 1000;
+}
+
+.loading-overlay.show {
+    display: flex;
+}
+
+.loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #667eea;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 16px;
+}
+
+.loading-text {
+    color: #495057;
+    font-size: 14px;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* 반응형 디자인 */
+@media (max-width: 480px) {
+    .balance-amount {
+        font-size: 28px;
+    }
+
+    .action-btn {
+        padding: 16px;
+    }
+
+    .action-btn .icon {
+        font-size: 24px;
+    }
+
+    .action-btn .label {
+        font-size: 14px;
+    }
+}

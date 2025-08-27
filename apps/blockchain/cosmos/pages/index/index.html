@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+        />
+        <title>Cosmos Wallet</title>
+        <link rel="stylesheet" href="../../app.css" />
+        <link rel="stylesheet" href="index.css" />
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <h1>Cosmos Wallet</h1>
+            </div>
+
+            <div class="main-content">
+                <div class="welcome-card">
+                    <h2>지갑을 생성하거나 불러오세요</h2>
+                    <p>안전한 Cosmos 지갑을 시작해보세요</p>
+                </div>
+
+                <!-- 지갑 생성 섹션 -->
+                <div class="section">
+                    <h3>지갑 생성하기</h3>
+
+                    <div class="create-options">
+                        <button
+                            class="create-option-btn"
+                            id="mnemonicBtn"
+                            onclick="showMnemonicOptions()"
+                            aria-label="니모닉으로 지갑 생성"
+                        >
+                            <div class="option-icon">
+                                🔑
+                            </div>
+                            <div class="option-text">
+                                <div class="option-title">
+                                    니모닉 생성
+                                </div>
+                                <div class="option-desc">
+                                    12단어 또는 24단어
+                                    니모닉으로 지갑 생성
+                                </div>
+                            </div>
+                            <div class="option-arrow">
+                                ›
+                            </div>
+                        </button>
+
+                        <button
+                            class="create-option-btn"
+                            id="privateKeyBtn"
+                            onclick="showPrivateKeyModal()"
+                            aria-label="Private Key로 지갑 생성"
+                        >
+                            <div class="option-icon">
+                                🗝️
+                            </div>
+                            <div class="option-text">
+                                <div class="option-title">
+                                    Private Key 생성
+                                </div>
+                                <div class="option-desc">
+                                    개인키로 지갑 생성
+                                </div>
+                            </div>
+                            <div class="option-arrow">
+                                ›
+                            </div>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 지갑 불러오기 섹션 -->
+                <div class="section">
+                    <h3>지갑 불러오기</h3>
+
+                    <div class="import-options">
+                        <button
+                            class="import-option-btn"
+                            id="importMnemonicBtn"
+                            onclick="showImportWalletModal('mnemonic')"
+                            aria-label="니모닉으로 지갑 불러오기"
+                        >
+                            <div class="option-icon">
+                                📝
+                            </div>
+                            <div class="option-text">
+                                <div class="option-title">
+                                    니모닉으로 불러오기
+                                </div>
+                                <div class="option-desc">
+                                    12단어 또는 24단어
+                                    니모닉을 입력하여 기존
+                                    지갑을 불러옵니다
+                                </div>
+                            </div>
+                            <div class="option-arrow">
+                                ›
+                            </div>
+                        </button>
+
+                        <button
+                            class="import-option-btn"
+                            id="importPrivateKeyBtn"
+                            onclick="showImportWalletModal('private')"
+                            aria-label="Private Key로 지갑 불러오기"
+                        >
+                            <div class="option-icon">
+                                🔐
+                            </div>
+                            <div class="option-text">
+                                <div class="option-title">
+                                    Private Key로 불러오기
+                                </div>
+                                <div class="option-desc">
+                                    개인키를 입력하여 기존
+                                    지갑을 불러옵니다
+                                </div>
+                            </div>
+                            <div class="option-arrow">
+                                ›
+                            </div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 모달 -->
+        <div
+            id="modal"
+            class="modal"
+            role="dialog"
+            aria-labelledby="modalTitle"
+            aria-hidden="true"
+        >
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="modalTitle">지갑 생성</h3>
+                    <button
+                        class="close-btn"
+                        id="closeModal"
+                        aria-label="모달 닫기"
+                    >
+                        &times;
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="modalContent"></div>
+                </div>
+                <div class="modal-footer">
+                    <button
+                        class="btn btn-primary"
+                        id="confirmBtn"
+                    >
+                        확인
+                    </button>
+                    <button
+                        class="btn btn-secondary"
+                        id="cancelBtn"
+                        aria-label="취소"
+                    >
+                        취소
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 스크린 리더 전용 텍스트 -->
+        <div class="sr-only">
+            <div id="loading-announcement">
+                로딩 중입니다
+            </div>
+            <div id="success-announcement">
+                성공적으로 완료되었습니다
+            </div>
+            <div id="error-announcement">
+                오류가 발생했습니다
+            </div>
+        </div>
+
+        <!-- CosmosJS 번들 로드 -->
+        <script src="../../assets/libs/cosmos-bundle.iife.js"></script>
+        <!-- 앱 스크립트들 -->
+        <script src="../../app.js"></script>
+        <script src="index.js"></script>
+    </body>
+</html>

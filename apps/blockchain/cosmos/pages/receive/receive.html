@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+        />
+        <title>Cosmos Wallet - 받기</title>
+        <link rel="stylesheet" href="../../app.css" />
+        <link rel="stylesheet" href="receive.css" />
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <button class="back-btn">←</button>
+                <h1>받기</h1>
+            </div>
+
+            <div class="main-content">
+                <!-- QR 코드 섹션 -->
+                <div class="qr-section">
+                    <div class="qr-container">
+                        <div
+                            id="qrCode"
+                            class="qr-code"
+                        ></div>
+                    </div>
+                    <div class="qr-info">
+                        <p>
+                            QR 코드를 스캔하여 지갑 주소를
+                            공유하세요
+                        </p>
+                    </div>
+                </div>
+
+                <!-- 지갑 주소 섹션 -->
+                <div class="address-section">
+                    <div class="address-label">
+                        내 지갑 주소
+                    </div>
+                    <div class="address-container">
+                        <div
+                            id="walletAddress"
+                            class="wallet-address"
+                        ></div>
+                        <button
+                            id="copyAddressBtn"
+                            class="copy-btn"
+                            onclick="copyAddress()"
+                            aria-label="주소 복사"
+                        >
+                            📋
+                        </button>
+                    </div>
+                    <div class="address-hint">
+                        이 주소로 ATOM을 받을 수 있습니다
+                    </div>
+                </div>
+
+                <!-- 추가 정보 섹션 -->
+                <div class="info-section">
+                    <div class="info-item">
+                        <div class="info-label">
+                            네트워크
+                        </div>
+                        <div class="info-value">
+                            Cosmos Hub
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">
+                            지원 토큰
+                        </div>
+                        <div class="info-value">
+                            ATOM (uatom)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 복사 완료 토스트 -->
+        <div id="copyToast" class="copy-toast">
+            주소가 복사되었습니다!
+        </div>
+
+        <!-- CosmosJS 번들 로드 -->
+        <script src="../../assets/libs/cosmos-bundle.iife.js"></script>
+        <!-- 앱 스크립트들 -->
+        <script src="../../app.js"></script>
+        <script src="receive.js"></script>
+    </body>
+</html>

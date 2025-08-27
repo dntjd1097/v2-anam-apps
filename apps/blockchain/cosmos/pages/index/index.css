@@ -1,0 +1,655 @@
+/* Index 페이지 스타일 */
+
+/* 페이지 로드 애니메이션 */
+body {
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+body.loaded {
+    opacity: 1;
+}
+
+.welcome-card {
+    text-align: center;
+    background: linear-gradient(
+        135deg,
+        #667eea 0%,
+        #764ba2 100%
+    );
+    color: white;
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 4px 20px rgba(102, 126, 234, 0.2);
+}
+
+.welcome-card h2 {
+    font-size: 20px;
+    margin-bottom: 8px;
+}
+
+.welcome-card p {
+    opacity: 0.9;
+    font-size: 14px;
+}
+
+.section {
+    margin-bottom: 32px;
+}
+
+.section h3 {
+    font-size: 18px;
+    margin-bottom: 16px;
+    color: #333;
+}
+
+/* 모달 스타일 수정 */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    overflow-y: auto; /* 모달 자체에 스크롤 추가 */
+    backdrop-filter: blur(4px);
+}
+
+.modal-content {
+    background-color: white;
+    margin: 5% auto; /* 상단 여백 줄임 */
+    padding: 0;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    max-height: 80vh; /* 최대 높이 제한 */
+    display: flex;
+    flex-direction: column;
+    animation: modalSlideIn 0.3s ease-out;
+}
+
+/* 큰 화면에서 모달 크기 조정 */
+@media (min-width: 768px) {
+    .modal-content {
+        max-width: 500px;
+        width: 80%;
+    }
+}
+
+@media (min-width: 1025px) {
+    .modal-content {
+        max-width: 600px;
+        width: 70%;
+    }
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 1px solid #e9ecef;
+    flex-shrink: 0; /* 헤더 고정 */
+}
+
+.modal-header h3 {
+    margin: 0;
+    font-size: 18px;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #6c757d;
+    transition: color 0.2s;
+}
+
+.close-btn:hover {
+    color: #333;
+}
+
+.modal-body {
+    padding: 20px;
+    overflow-y: auto; /* 본문에 스크롤 추가 */
+    flex: 1; /* 남은 공간 차지 */
+    max-height: calc(
+        80vh - 140px
+    ); /* 헤더와 푸터 높이 제외 */
+}
+
+.modal-footer {
+    display: flex;
+    gap: 12px;
+    padding: 20px;
+    border-top: 1px solid #e9ecef;
+    flex-shrink: 0; /* 푸터 고정 */
+}
+
+.modal-footer .btn {
+    flex: 1;
+    margin: 0;
+}
+
+/* 로딩 컨테이너 */
+.loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    text-align: center;
+}
+
+.loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #667eea;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 16px;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.loading-container p {
+    color: #666;
+    font-size: 14px;
+    margin: 0;
+}
+
+/* 니모닉 표시 스타일 수정 */
+.mnemonic-display {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 16px;
+    margin: 16px 0;
+    font-family: monospace;
+    font-size: 14px;
+    line-height: 1.6;
+    word-break: break-all;
+    max-height: 300px; /* 최대 높이 제한 */
+    overflow-y: auto; /* 스크롤 추가 */
+}
+
+.mnemonic-words {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.mnemonic-word {
+    background: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+    text-align: center;
+    font-size: 12px;
+    border: 1px solid #dee2e6;
+    transition: all 0.2s;
+}
+
+.mnemonic-word:hover {
+    border-color: #667eea;
+    background: #f8f9ff;
+}
+
+/* Private Key 표시 */
+.private-key-display {
+    background: white;
+    padding: 12px;
+    border-radius: 6px;
+    border: 1px solid #dee2e6;
+    font-family: monospace;
+    font-size: 12px;
+    word-break: break-all;
+    margin: 8px 0;
+    max-height: 120px;
+    overflow-y: auto;
+}
+
+/* 입력 필드 */
+.textarea-field {
+    width: 100%;
+    min-height: 100px;
+    max-height: 200px; /* 최대 높이 제한 */
+    padding: 12px 16px;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: monospace;
+    resize: vertical;
+    overflow-y: auto; /* 스크롤 추가 */
+    transition: border-color 0.2s;
+}
+
+.textarea-field:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+/* 입력 힌트 */
+.input-hint {
+    font-size: 12px;
+    color: #666;
+    margin-top: 8px;
+    font-style: italic;
+}
+
+/* 경고 메시지 */
+.warning-message {
+    background: #fff3cd;
+    border: 1px solid #ffeaa7;
+    color: #856404;
+    padding: 12px;
+    border-radius: 8px;
+    margin: 16px 0;
+    font-size: 14px;
+}
+
+.warning-message strong {
+    display: block;
+    margin-bottom: 8px;
+}
+
+/* 에러 메시지 */
+.error-message {
+    background: #f8d7da;
+    border: 1px solid #f5c6cb;
+    color: #721c24;
+    padding: 12px;
+    border-radius: 8px;
+    margin: 16px 0;
+    font-size: 14px;
+}
+
+.error-message strong {
+    display: block;
+    margin-bottom: 8px;
+}
+
+/* 복사 버튼 */
+.copy-btn {
+    background: #667eea;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 12px;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.copy-btn:hover {
+    background: #5a6fd8;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+}
+
+.copy-btn:active {
+    transform: translateY(0);
+}
+
+.copy-icon {
+    font-size: 14px;
+}
+
+/* 생성 옵션 버튼 스타일 */
+.create-options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.create-option-btn {
+    display: flex;
+    align-items: center;
+    padding: 16px 20px;
+    background: white;
+    border: 1px solid #e9ecef;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: left;
+    width: 100%;
+}
+
+.create-option-btn:hover {
+    border-color: #667eea;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.1);
+    transform: translateY(-1px);
+}
+
+.create-option-btn:active {
+    transform: translateY(0);
+}
+
+.create-option-btn .option-icon {
+    font-size: 24px;
+    margin-right: 16px;
+    width: 32px;
+    text-align: center;
+}
+
+.create-option-btn .option-text {
+    flex: 1;
+}
+
+.create-option-btn .option-title {
+    font-weight: 600;
+    font-size: 16px;
+    color: #333;
+    margin-bottom: 4px;
+}
+
+.create-option-btn .option-desc {
+    font-size: 13px;
+    color: #666;
+    line-height: 1.4;
+}
+
+.create-option-btn .option-arrow {
+    font-size: 18px;
+    color: #999;
+    margin-left: 12px;
+    transition: transform 0.2s;
+}
+
+.create-option-btn:hover .option-arrow {
+    transform: translateX(2px);
+}
+
+/* 불러오기 옵션 버튼 스타일 */
+.import-options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.import-option-btn {
+    display: flex;
+    align-items: center;
+    padding: 16px 20px;
+    background: white;
+    border: 1px solid #e9ecef;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: left;
+    width: 100%;
+}
+
+.import-option-btn:hover {
+    border-color: #667eea;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.1);
+    transform: translateY(-1px);
+}
+
+.import-option-btn:active {
+    transform: translateY(0);
+}
+
+.import-option-btn .option-icon {
+    font-size: 24px;
+    margin-right: 16px;
+    width: 32px;
+    text-align: center;
+}
+
+.import-option-btn .option-text {
+    flex: 1;
+}
+
+.import-option-btn .option-title {
+    font-weight: 600;
+    font-size: 16px;
+    color: #333;
+    margin-bottom: 4px;
+}
+
+.import-option-btn .option-desc {
+    font-size: 13px;
+    color: #666;
+    line-height: 1.4;
+}
+
+.import-option-btn .option-arrow {
+    font-size: 18px;
+    color: #999;
+    margin-left: 12px;
+    transition: transform 0.2s;
+}
+
+.import-option-btn:hover .option-arrow {
+    transform: translateX(2px);
+}
+
+/* 니모닉 옵션 모달 스타일 */
+.mnemonic-options {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.mnemonic-option {
+    border: 2px solid #e9ecef;
+    border-radius: 12px;
+    padding: 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.mnemonic-option:hover {
+    border-color: #667eea;
+    background: #f8f9ff;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.1);
+}
+
+.mnemonic-option.selected {
+    border-color: #667eea;
+    background: #f0f2ff;
+}
+
+.mnemonic-option .option-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.mnemonic-option .option-title {
+    font-weight: 600;
+    font-size: 16px;
+    color: #333;
+}
+
+.mnemonic-option .option-badge {
+    background: #667eea;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.mnemonic-option .mnemonic-preview {
+    font-family: monospace;
+    font-size: 13px;
+    color: #555;
+    background: #f8f9fa;
+    padding: 12px;
+    border-radius: 8px;
+    line-height: 1.5;
+    word-break: break-all;
+    margin-bottom: 8px;
+}
+
+.mnemonic-option .option-desc {
+    font-size: 12px;
+    color: #666;
+    line-height: 1.4;
+}
+
+/* 버튼 스타일 개선 */
+.btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.btn-primary {
+    background: #667eea;
+    color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+    background: #5a6fd8;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+}
+
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+}
+
+.btn-secondary:hover:not(:disabled) {
+    background: #5a6268;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(108, 117, 125, 0.3);
+}
+
+/* 모바일 반응형 */
+@media (max-width: 480px) {
+    .modal-content {
+        margin: 10% auto;
+        width: 95%;
+        max-height: 85vh;
+    }
+
+    .modal-body {
+        max-height: calc(85vh - 140px);
+    }
+
+    .mnemonic-words {
+        grid-template-columns: repeat(
+            2,
+            1fr
+        ); /* 모바일에서는 2열 */
+    }
+
+    .mnemonic-word {
+        font-size: 11px;
+        padding: 6px 8px;
+    }
+
+    .create-option-btn {
+        padding: 14px 16px;
+    }
+
+    .create-option-btn .option-icon {
+        font-size: 20px;
+        margin-right: 12px;
+    }
+
+    .create-option-btn .option-title {
+        font-size: 14px;
+    }
+
+    .create-option-btn .option-desc {
+        font-size: 12px;
+    }
+
+    .import-option-btn {
+        padding: 14px 16px;
+    }
+
+    .import-option-btn .option-icon {
+        font-size: 20px;
+        margin-right: 12px;
+    }
+
+    .import-option-btn .option-title {
+        font-size: 14px;
+    }
+
+    .import-option-btn .option-desc {
+        font-size: 12px;
+    }
+}
+
+/* 스크롤바 스타일링 */
+.modal-body::-webkit-scrollbar,
+.mnemonic-display::-webkit-scrollbar,
+.textarea-field::-webkit-scrollbar,
+.private-key-display::-webkit-scrollbar {
+    width: 6px;
+}
+
+.modal-body::-webkit-scrollbar-track,
+.mnemonic-display::-webkit-scrollbar-track,
+.textarea-field::-webkit-scrollbar-track,
+.private-key-display::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+.modal-body::-webkit-scrollbar-thumb,
+.mnemonic-display::-webkit-scrollbar-thumb,
+.textarea-field::-webkit-scrollbar-thumb,
+.private-key-display::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 3px;
+}
+
+.modal-body::-webkit-scrollbar-thumb:hover,
+.mnemonic-display::-webkit-scrollbar-thumb:hover,
+.textarea-field::-webkit-scrollbar-thumb:hover,
+.private-key-display::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
