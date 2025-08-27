@@ -6,7 +6,6 @@
         "pages/main/main",
         "pages/send/send",
         "pages/receive/receive",
-        "pages/history/history",
         "pages/settings/settings"
     ]
 }
