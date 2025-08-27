@@ -29,6 +29,7 @@ import * as bip39 from 'bip39';
 import { BIP32Factory } from 'bip32';
 import { ECPairFactory } from 'ecpair';
 import ecc from '@bitcoinerlab/secp256k1';
+import { cosmosQRGenerator } from './qr-generator.js';
 
 // ECC 라이브러리로 BIP32와 ECPair 팩토리 생성
 const bip32 = BIP32Factory(ecc);
@@ -518,7 +519,7 @@ const CosmosJS = {
     getDefaultRestUrl: () => {
         const config = CosmosJS.getConfig();
         const apiEndpoints = config.apis.rest;
-        const randomIndex = Math.floor( 
+        const randomIndex = Math.floor(
             Math.random() * apiEndpoints.length
         );
         return apiEndpoints[randomIndex].address;
@@ -529,6 +530,71 @@ const CosmosJS = {
         mainnet: 'https://rpc.cosmos.network:26657',
         testnet:
             'https://rpc.sentry-01.theta-testnet.polypore.xyz:26657',
+    },
+
+    // QR 코드 생성 관련 메서드들
+
+    // 기본 텍스트를 QR 코드로 변환
+    generateQRCode: (text, options) => {
+        return cosmosQRGenerator.generateQRCode(
+            text,
+            options
+        );
+    },
+
+    // 텍스트를 QR 코드 SVG로 변환
+    generateQRCodeSVG: (text, options) => {
+        return cosmosQRGenerator.generateQRCodeSVG(
+            text,
+            options
+        );
+    },
+
+    // 텍스트를 QR 코드 Canvas로 변환
+    generateQRCodeCanvas: (text, canvas, options) => {
+        return cosmosQRGenerator.generateQRCodeCanvas(
+            text,
+            canvas,
+            options
+        );
+    },
+
+    // QR 코드를 파일로 저장
+    generateQRCodeFile: (text, filename, options) => {
+        return cosmosQRGenerator.generateQRCodeFile(
+            text,
+            filename,
+            options
+        );
+    },
+
+    // 지갑 주소를 QR 코드로 변환
+    generateAddressQRCode: (address, options) => {
+        return cosmosQRGenerator.generateAddressQRCode(
+            address,
+            options
+        );
+    },
+
+    // 설정을 QR 코드로 변환
+    generateConfigQRCode: (config, options) => {
+        return cosmosQRGenerator.generateConfigQRCode(
+            config,
+            options
+        );
+    },
+
+    // 트랜잭션 데이터를 QR 코드로 변환
+    generateTransactionQRCode: (txData, options) => {
+        return cosmosQRGenerator.generateTransactionQRCode(
+            txData,
+            options
+        );
+    },
+
+    // QR 코드 품질 정보 가져오기
+    getQRCodeQualityInfo: (text) => {
+        return cosmosQRGenerator.getQRCodeQualityInfo(text);
     },
 };
 

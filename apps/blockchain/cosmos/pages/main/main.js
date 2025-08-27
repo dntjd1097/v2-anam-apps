@@ -352,23 +352,87 @@ function parseTransaction(tx, address, chainInfo) {
 
     // 기본 거래 정보
     const transaction = {
-        hash: tx.hash,
+        hash: tx.txhash || tx.hash,
         height: tx.height?.toString?.() || tx.height,
         timestamp: tx.timestamp,
         code: tx.code,
-        gasUsed: tx.gasUsed?.toString?.() || tx.gasUsed,
+        gasUsed:
+            tx.gas_used?.toString?.() ||
+            tx.gasUsed?.toString?.() ||
+            tx.gasUsed,
         gasWanted:
-            tx.gasWanted?.toString?.() || tx.gasWanted,
+            tx.gas_wanted?.toString?.() ||
+            tx.gasWanted?.toString?.() ||
+            tx.gasWanted,
         events: tx.events || [],
         amount: '0',
         denom: chainInfo.denom,
         type: 'unknown',
+        memo: '',
+        fee: '0',
+        feeDenom: chainInfo.denom,
     };
 
-    // tx body에서 transfer 정보 파싱 시도
+    // fee_pay 이벤트에서 수수료 정보 추출
+    if (tx.events) {
+        for (const event of tx.events) {
+            if (
+                event.type === 'fee_pay' &&
+                event.attributes
+            ) {
+                for (const attr of event.attributes) {
+                    if (attr.key === 'fee') {
+                        const feeValue = attr.value;
+                        if (
+                            feeValue &&
+                            feeValue.includes('uatom')
+                        ) {
+                            transaction.fee =
+                                feeValue.replace(
+                                    'uatom',
+                                    ''
+                                );
+                            transaction.feeDenom = 'uatom';
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // tx body에서 transfer 정보 파싱 시도 (우선순위 1)
     if (tx.tx && tx.tx.body && tx.tx.body.messages) {
         const transferInfo = parseTxBodyTransfer(
             tx.tx.body,
+            address,
+            chainInfo
+        );
+        if (transferInfo) {
+            transaction.amount = transferInfo.amount;
+            transaction.denom = transferInfo.denom;
+            transaction.type = transferInfo.type;
+            transaction.sender = transferInfo.sender;
+            transaction.recipient = transferInfo.recipient;
+            transaction.memo = tx.tx.body.memo || '';
+
+            // 수수료 정보 추가
+            if (tx.tx.auth_info && tx.tx.auth_info.fee) {
+                const fee = tx.tx.auth_info.fee.amount;
+                if (fee && fee.length > 0) {
+                    transaction.fee = fee[0].amount;
+                    transaction.feeDenom = fee[0].denom;
+                }
+            }
+
+            return transaction;
+        }
+    }
+
+    // logs에서 transfer 정보 추출 (우선순위 2)
+    if (tx.logs && Array.isArray(tx.logs)) {
+        const transferInfo = parseLogsTransfer(
+            tx.logs,
             address,
             chainInfo
         );
@@ -382,23 +446,19 @@ function parseTransaction(tx, address, chainInfo) {
         }
     }
 
-    // 이벤트에서 전송 정보 추출 (기존 방식)
+    // 이벤트에서 전송 정보 추출 (우선순위 3)
     if (tx.events) {
-        for (const event of tx.events) {
-            if (event.type === 'transfer') {
-                const transferInfo = parseTransferEvent(
-                    event,
-                    address,
-                    chainInfo
-                );
-                if (transferInfo) {
-                    transaction.amount =
-                        transferInfo.amount;
-                    transaction.denom = transferInfo.denom;
-                    transaction.type = transferInfo.type;
-                    break;
-                }
-            }
+        const transferInfo = parseEventsTransfer(
+            tx.events,
+            address,
+            chainInfo
+        );
+        if (transferInfo) {
+            transaction.amount = transferInfo.amount;
+            transaction.denom = transferInfo.denom;
+            transaction.type = transferInfo.type;
+            transaction.sender = transferInfo.sender;
+            transaction.recipient = transferInfo.recipient;
         }
     }
 
@@ -480,11 +540,325 @@ function parseTxBodyTransfer(txBody, address, chainInfo) {
             }
         }
 
-        console.log('No valid MsgSend found in messages');
+        // 다른 메시지 타입들도 확인 (MsgMultiSend, MsgDelegate 등)
+        for (const message of txBody.messages) {
+            console.log(
+                'Processing other message type:',
+                message
+            );
+
+            // MsgMultiSend 처리
+            if (
+                message['@type'] ===
+                '/cosmos.bank.v1beta1.MsgMultiSend'
+            ) {
+                const inputs = message.inputs || [];
+                const outputs = message.outputs || [];
+
+                // 입력에서 주소 찾기
+                for (const input of inputs) {
+                    if (input.address === address) {
+                        const amount = input.coins?.[0];
+                        if (
+                            amount &&
+                            amount.denom &&
+                            amount.amount
+                        ) {
+                            return {
+                                type: 'send',
+                                amount: amount.amount,
+                                denom: amount.denom,
+                                sender: address,
+                                recipient: 'Multiple',
+                            };
+                        }
+                    }
+                }
+
+                // 출력에서 주소 찾기
+                for (const output of outputs) {
+                    if (output.address === address) {
+                        const amount = output.coins?.[0];
+                        if (
+                            amount &&
+                            amount.denom &&
+                            amount.amount
+                        ) {
+                            return {
+                                type: 'receive',
+                                amount: amount.amount,
+                                denom: amount.denom,
+                                sender: 'Multiple',
+                                recipient: address,
+                            };
+                        }
+                    }
+                }
+            }
+
+            // MsgDelegate 처리
+            if (
+                message['@type'] ===
+                '/cosmos.staking.v1beta1.MsgDelegate'
+            ) {
+                if (message.delegator_address === address) {
+                    const amount = message.amount;
+                    if (
+                        amount &&
+                        amount.denom &&
+                        amount.amount
+                    ) {
+                        return {
+                            type: 'delegate',
+                            amount: amount.amount,
+                            denom: amount.denom,
+                            sender: address,
+                            recipient:
+                                message.validator_address,
+                        };
+                    }
+                }
+            }
+        }
+
+        console.log(
+            'No valid transfer message found in messages'
+        );
         return null;
     } catch (error) {
         console.error(
             'Error parsing tx body transfer:',
+            error
+        );
+        return null;
+    }
+}
+
+// events 배열에서 transfer 정보 파싱하는 함수
+function parseEventsTransfer(events, address, chainInfo) {
+    try {
+        console.log('=== EVENTS PARSING ===');
+        console.log('Events:', events);
+
+        // transfer 이벤트들을 모두 수집
+        const transferEvents = events.filter(
+            (event) => event.type === 'transfer'
+        );
+        console.log(
+            'Found transfer events:',
+            transferEvents
+        );
+
+        if (transferEvents.length === 0) {
+            return null;
+        }
+
+        // 사용자 주소와 관련된 transfer 이벤트 찾기
+        let bestTransfer = null;
+        let maxAmount = 0;
+
+        for (const event of transferEvents) {
+            if (!event.attributes) continue;
+
+            let sender = '';
+            let recipient = '';
+            let amount = '';
+            let denom = chainInfo.denom;
+
+            // 이벤트 속성에서 정보 추출
+            for (const attr of event.attributes) {
+                switch (attr.key) {
+                    case 'sender':
+                        sender = attr.value;
+                        break;
+                    case 'recipient':
+                        recipient = attr.value;
+                        break;
+                    case 'amount':
+                        amount = attr.value;
+                        break;
+                    case 'denom':
+                        denom = attr.value;
+                        break;
+                }
+            }
+
+            // 전송 방향 결정
+            let type = 'unknown';
+            if (sender === address) {
+                type = 'send';
+            } else if (recipient === address) {
+                type = 'receive';
+            }
+
+            // 사용자와 관련이 없는 경우 스킵
+            if (type === 'unknown') continue;
+
+            // 금액 파싱
+            let parsedAmount = 0;
+            if (amount) {
+                const amounts = amount.split(',');
+                for (const amt of amounts) {
+                    if (amt.endsWith(denom)) {
+                        const amountValue = amt.replace(
+                            denom,
+                            ''
+                        );
+                        const numAmount =
+                            parseInt(amountValue);
+                        if (
+                            !isNaN(numAmount) &&
+                            numAmount > 0
+                        ) {
+                            parsedAmount = numAmount;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            // 가장 큰 금액의 transfer를 선택 (실제 전송 금액일 가능성이 높음)
+            if (parsedAmount > maxAmount) {
+                maxAmount = parsedAmount;
+                bestTransfer = {
+                    type,
+                    amount: parsedAmount.toString(),
+                    denom,
+                    sender,
+                    recipient,
+                };
+            }
+        }
+
+        if (bestTransfer) {
+            console.log(
+                'Best transfer found:',
+                bestTransfer
+            );
+            return bestTransfer;
+        }
+
+        console.log('No valid transfer found in events');
+        return null;
+    } catch (error) {
+        console.error(
+            'Error parsing events transfer:',
+            error
+        );
+        return null;
+    }
+}
+
+// logs에서 transfer 정보 파싱하는 함수
+function parseLogsTransfer(logs, address, chainInfo) {
+    try {
+        console.log('=== LOGS PARSING ===');
+        console.log('Logs:', logs);
+
+        for (const log of logs) {
+            if (!log.events || !Array.isArray(log.events)) {
+                continue;
+            }
+
+            // transfer 이벤트 찾기
+            for (const event of log.events) {
+                if (
+                    event.type === 'transfer' &&
+                    event.attributes
+                ) {
+                    console.log(
+                        'Found transfer event:',
+                        event
+                    );
+
+                    let sender = '';
+                    let recipient = '';
+                    let amount = '';
+                    let denom = chainInfo.denom;
+
+                    // 이벤트 속성에서 정보 추출
+                    for (const attr of event.attributes) {
+                        switch (attr.key) {
+                            case 'sender':
+                                sender = attr.value;
+                                break;
+                            case 'recipient':
+                                recipient = attr.value;
+                                break;
+                            case 'amount':
+                                amount = attr.value;
+                                break;
+                            case 'denom':
+                                denom = attr.value;
+                                break;
+                        }
+                    }
+
+                    // 전송 방향 결정
+                    let type = 'unknown';
+                    if (sender === address) {
+                        type = 'send';
+                    } else if (recipient === address) {
+                        type = 'receive';
+                    }
+
+                    // 금액 파싱 (uatom 등)
+                    let parsedAmount = '0';
+                    if (amount) {
+                        // 여러 토큰이 있을 수 있음 (예: "10000uatom,5000uatom")
+                        const amounts = amount.split(',');
+                        for (const amt of amounts) {
+                            if (amt.endsWith(denom)) {
+                                const amountValue =
+                                    amt.replace(denom, '');
+                                // 수수료나 팁과 관련된 작은 금액은 제외 (일반적으로 1000uatom 미만)
+                                // 실제 전송 금액은 보통 더 큰 값임
+                                if (
+                                    parseInt(amountValue) >=
+                                    1000
+                                ) {
+                                    parsedAmount =
+                                        amountValue;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+                    // 유효한 전송 정보가 있는 경우
+                    if (
+                        parsedAmount !== '0' &&
+                        (type === 'send' ||
+                            type === 'receive')
+                    ) {
+                        console.log(
+                            'Parsed transfer info from logs:',
+                            {
+                                type,
+                                amount: parsedAmount,
+                                denom,
+                                sender,
+                                recipient,
+                            }
+                        );
+
+                        return {
+                            type,
+                            amount: parsedAmount,
+                            denom,
+                            sender,
+                            recipient,
+                        };
+                    }
+                }
+            }
+        }
+
+        console.log('No valid transfer found in logs');
+        return null;
+    } catch (error) {
+        console.error(
+            'Error parsing logs transfer:',
             error
         );
         return null;
@@ -571,7 +945,14 @@ function displayTransactions(transactions) {
     const transactionHtml = transactions
         .map((tx) => {
             const type = tx.type;
-            const icon = type === 'receive' ? '📥' : '📤';
+            let icon = '📤'; // 기본값
+            if (type === 'receive') {
+                icon = '📥';
+            } else if (type === 'delegate') {
+                icon = '🔒';
+            } else if (type === 'send') {
+                icon = '📤';
+            }
             const amount = app.baseToDisplay(
                 tx.amount || '0'
             );
@@ -593,6 +974,33 @@ function displayTransactions(transactions) {
                 }
             }
 
+            // 수수료 정보 추가
+            let feeInfo = '';
+            if (tx.fee && tx.fee !== '0') {
+                const feeAmount = app.baseToDisplay(tx.fee);
+                feeInfo = `<div class="transaction-fee">Fee: ${feeAmount} ${
+                    tx.feeDenom || chainInfo.symbol
+                }</div>`;
+            }
+
+            // 메모 정보 추가
+            let memoInfo = '';
+            if (tx.memo && tx.memo.trim() !== '') {
+                memoInfo = `<div class="transaction-memo">Memo: ${tx.memo}</div>`;
+            }
+
+            // 상태 정보 추가
+            let statusInfo = '';
+            if (tx.code !== undefined) {
+                const status =
+                    tx.code === 0
+                        ? '✅ Success'
+                        : '❌ Failed';
+                statusInfo = `<div class="transaction-status ${
+                    tx.code === 0 ? 'success' : 'failed'
+                }">${status}</div>`;
+            }
+
             return `
                 <div class="transaction-item" onclick="viewTransaction('${tx.hash}')">
                     <div class="transaction-icon ${type}">
@@ -601,6 +1009,9 @@ function displayTransactions(transactions) {
                     <div class="transaction-details">
                         <div class="transaction-amount">${amount} ${chainInfo.symbol}</div>
                         <div class="transaction-address">${addressInfo}</div>
+                        ${memoInfo}
+                        ${feeInfo}
+                        ${statusInfo}
                         <div class="transaction-date">${date}</div>
                     </div>
                 </div>

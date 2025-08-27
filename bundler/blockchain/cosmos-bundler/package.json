@@ -20,7 +20,8 @@
         "@cosmjs/proto-signing": "^0.32.2",
         "@cosmjs/amino": "^0.32.2",
         "@bitcoinerlab/secp256k1": "^1.0.5",
-        "ecpair": "^2.1.0"
+        "ecpair": "^2.1.0",
+        "qrcode": "^1.5.3"
     },
     "devDependencies": {
         "vite": "^5.0.0",
